@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <meta name="description" content="Documents, presentacions i vídeos d'Israel Belchi.">
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <main>
         <div class="content-wrapper">
@@ -14,11 +16,11 @@
             <section class="profile-section">
                 <div class="profile-img-container">
                     <img src="assets/portrait.png" alt="Fotografia de perfil d'Israel Belchi">
+                    <a href="index.html" class="terminal-link back-link">[\←]</a>
                 </div>
             </section>
 
             <section class="bubble-section inner-section">
-                <a href="index.html" class="terminal-link back-link">[\←]</a>
 
                 <div class="inner-grid docs-grid">
 
@@ -52,9 +54,12 @@
                     <div class="doc-item" data-type="pdf" data-src="assets/docs/exemple.pdf">
                         <div class="doc-thumb pdf-thumb">
                             <svg viewBox="0 0 48 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <rect x="1" y="1" width="46" height="58" rx="3" fill="var(--primary-container)" stroke="var(--border-color)"/>
-                                <path d="M12 22h24M12 30h24M12 38h16" stroke="var(--primary-color)" stroke-width="2" stroke-linecap="round"/>
-                                <text x="24" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent-color)" font-weight="700">PDF</text>
+                                <rect x="1" y="1" width="46" height="58" rx="3" fill="var(--primary-container)"
+                                    stroke="var(--border-color)" />
+                                <path d="M12 22h24M12 30h24M12 38h16" stroke="var(--primary-color)" stroke-width="2"
+                                    stroke-linecap="round" />
+                                <text x="24" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="7"
+                                    fill="var(--accent-color)" font-weight="700">PDF</text>
                             </svg>
                         </div>
                         <div class="doc-meta">
@@ -74,10 +79,13 @@
                     <div class="doc-item" data-type="pdf" data-src="assets/docs/presentacio.pdf">
                         <div class="doc-thumb pdf-thumb">
                             <svg viewBox="0 0 48 60" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                                <rect x="1" y="1" width="46" height="58" rx="3" fill="var(--primary-container)" stroke="var(--border-color)"/>
-                                <rect x="10" y="18" width="28" height="18" rx="1" fill="var(--primary-color)" opacity="0.2"/>
-                                <path d="M10 42h28" stroke="var(--border-color)" stroke-width="1.5"/>
-                                <text x="24" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="7" fill="var(--accent-color)" font-weight="700">PRES</text>
+                                <rect x="1" y="1" width="46" height="58" rx="3" fill="var(--primary-container)"
+                                    stroke="var(--border-color)" />
+                                <rect x="10" y="18" width="28" height="18" rx="1" fill="var(--primary-color)"
+                                    opacity="0.2" />
+                                <path d="M10 42h28" stroke="var(--border-color)" stroke-width="1.5" />
+                                <text x="24" y="14" text-anchor="middle" font-family="var(--font-mono)" font-size="7"
+                                    fill="var(--accent-color)" font-weight="700">PRES</text>
                             </svg>
                         </div>
                         <div class="doc-meta">
@@ -162,4 +170,5 @@
         document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
     </script>
 </body>
+
 </html>

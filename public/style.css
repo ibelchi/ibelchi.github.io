@@ -51,8 +51,9 @@ main {
     flex: 1;
     display: flex;
     align-items: flex-start;
+    /* canvia center per flex-start */
     justify-content: center;
-    padding: 10rem var(--spacing-lg) var(--spacing-lg);
+    padding: var(--spacing-lg);
     width: 100%;
     max-width: 1000px;
     margin: 0 auto;
@@ -76,7 +77,13 @@ main {
 
 /* ── Profile Photo ── */
 .profile-section {
-    flex-shrink: 0;
+    position: sticky;
+    top: var(--spacing-lg);
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
 }
 
 .profile-img-container {
@@ -308,17 +315,15 @@ footer {
 /* Botó de tornada */
 .back-link {
     display: inline-block;
-    margin-bottom: var(--spacing-md);
     font-size: 0.9rem;
     opacity: 0.65;
-    letter-spacing: 0.01em;
+    margin-top: var(--spacing-xs);
 }
 
 .back-link:hover {
     opacity: 1;
 }
 
-/* El back-link no necessita la línia de sota */
 .back-link::after {
     display: none;
 }

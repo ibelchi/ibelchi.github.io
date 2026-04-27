@@ -87,6 +87,12 @@ git commit -m "Blog: afegir entrada 'El títol de l'entrada'"
 ```powershell
 git push origin main
 ```
+O bé aquesta comanda:
+
+```powershell
+git add -A; git commit -m "Descripció dels canvis"; git push origin main
+```
+
 
 ---
 
