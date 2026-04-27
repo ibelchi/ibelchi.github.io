@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Israel Belchi | Psicòleg</title>
+    <meta name="description" content="Psicòleg especialista en salut mental i trastorns de conducta en persones amb discapacitat intel·lectual. Tecno-optimista, cartomàgic.">
+    <link rel="stylesheet" href="theme-terminal.css">
+</head>
+<body>
+    <!-- CRT Scanlines overlay -->
+    <div class="scanlines" aria-hidden="true"></div>
+
+    <main>
+        <div class="content-wrapper">
+
+            <section class="profile-section">
+                <div class="profile-img-container">
+                    <img src="assets/portrait.png" alt="Fotografia de perfil d'Israel Belchi">
+                </div>
+            </section>
+
+            <section class="bubble-section">
+                <div class="terminal-bubble">
+                    <div class="terminal-titlebar">
+                        <span class="terminal-dots">
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                            <span class="dot"></span>
+                        </span>
+                        <span class="terminal-prompt">belchi@hub:~$</span>
+                    </div>
+                    <div class="bubble-inner">
+                        <!-- Ghost: fixa la mida final del globus -->
+                        <p class="bubble-text bubble-ghost" aria-hidden="true">Sóc psicòleg especialista en salut mental i trastorns de conducta en persones amb discapacitat intel·lectual.<br>Només la ciència i els valors progressistes ens salvaran.<br>Cartomàgia a les mans, llum als ulls, píxels al cap.</p>
+                        <!-- Text animat (typewriter) -->
+                        <p class="bubble-text bubble-live" id="typewriter-text"><span class="cursor"></span></p>
+                    </div>
+                </div>
+
+                <nav class="nav-links">
+                    <a href="#" class="terminal-link">[\blog]</a>
+                    <a href="#" class="terminal-link">[\docs]</a>
+                    <a href="https://github.com/ibelchi" class="terminal-link" target="_blank" rel="noopener noreferrer">[\github]</a>
+                </nav>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <p class="copyright">© 2026 Israel Belchi</p>
+    </footer>
+
+    <script>
+        const text = "Sóc psicòleg especialista en salut mental i trastorns de conducta en persones amb discapacitat intel·lectual.\nNomés la ciència i els valors progressistes ens salvaran.\nCartomàgia a les mans, llum als ulls, píxels al cap.";
+        const typewriterElement = document.getElementById('typewriter-text');
+        const cursorSpan = typewriterElement.querySelector('.cursor');
+        let index = 0;
+
+        function type() {
+            if (index < text.length) {
+                const char = text.charAt(index);
+                if (char === '\n') {
+                    typewriterElement.insertBefore(document.createElement('br'), cursorSpan);
+                } else {
+                    typewriterElement.insertBefore(document.createTextNode(char), cursorSpan);
+                }
+                index++;
+                setTimeout(type, Math.random() * 45 + 15);
+            }
+        }
+
+        window.addEventListener('load', () => { setTimeout(type, 800); });
+    </script>
+</body>
+</html>

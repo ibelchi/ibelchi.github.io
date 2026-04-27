@@ -1,0 +1,4 @@
+base_url = "https://ibelchi.github.io"
+title = "Israel Belchi"
+compile_sass = false
+generate_feeds = false

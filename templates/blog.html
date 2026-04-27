@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Blog | Israel Belchi{% endblock %}
+{% block content %}
+<main>
+    <div class="content-wrapper">
+        <section class="profile-section">
+            <div class="profile-img-container">
+                <img src="/assets/portrait.png" alt="Fotografia de perfil d'Israel Belchi">
+            </div>
+        </section>
+        <section class="bubble-section inner-section">
+            <a href="/" class="terminal-link back-link">[\←]</a>
+            <div class="blog-list">
+                {% for page in section.pages %}
+                <article class="blog-entry">
+                    <time class="entry-date">{{ page.date | date(format="%Y·%m·%d") }}</time>
+                    <a href="{{ page.permalink }}" class="entry-title terminal-link">{{ page.title }}</a>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+    </div>
+</main>
+{% endblock %}
