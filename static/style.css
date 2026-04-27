@@ -315,7 +315,7 @@ footer {
 
 /* Botó de tornada */
 .back-link {
-    display: inline-block;
+    display: block;
     font-size: 0.9rem;
     opacity: 0.65;
     margin-top: var(--spacing-xs);
