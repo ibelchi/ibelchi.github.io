@@ -4,7 +4,7 @@ date = 2026-05-13
 template = "blog-page.html"
 +++
 
-**Kintsugi 金継ぎ**
+
 La cultura japonesa em produeix emocions molt contraposades.
 Un concepte que li és propi i que m'encanta és el [Kintsugi](https://en.wikipedia.org/wiki/Kintsugi), aquest homenatge al pas del temps i la imperfecció.
 El ritual és el que menys m'interessa. El que més, anar a contracorrent de l'obsolescència, el FOMO, les presses (de les que sóc un clar exponent jo també).
