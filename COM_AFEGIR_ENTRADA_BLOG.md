@@ -51,6 +51,40 @@ Pots fer servir Markdown: **negreta**, *cursiva*, etc.
 
 ---
 
+## 🖼️ Imatges i Enllaços
+
+Pots afegir enllaços i imatges utilitzant la sintaxi de Markdown o HTML si necessites un disseny específic.
+
+### 🔗 Enllaços
+La sintaxi és `[text de l'enllaç](URL)`:
+```markdown
+[Visita Google](https://www.google.com)
+```
+
+### 📷 Imatges
+La sintaxi és `![text alternatiu](ruta_de_la_imatge)`:
+```markdown
+![Descripció](assets/imatge.jpg)
+```
+
+### ↔️ Dues imatges de costat i centrades
+Com que Markdown no ho permet directament, utilitza aquest codi HTML:
+```html
+<div style="display: flex; justify-content: center; gap: 10px;">
+  <img src="assets/imatge1.jpg" alt="Descripció 1" style="width: 45%;">
+  <img src="assets/imatge2.jpg" alt="Descripció 2" style="width: 45%;">
+</div>
+```
+
+### 📉 Comprimir imatges (Recomanat)
+Perquè el web carregui ràpid:
+* **Dimensions**: Redueix l'amplada a un màxim de **1000px - 1200px**.
+* **Format**: Fes servir **WebP** (ideal) o **JPG** (qualitat 70-80%).
+* **Pes**: Intenta que cada imatge pesi **menys de 200 KB**.
+* **Eines**: Pots fer servir [Squoosh.app](https://squoosh.app/) o [TinyPNG.com](https://tinypng.com/).
+
+---
+
 ## Pas 3 — Genera el lloc (build)
 
 Obre un terminal a la carpeta del projecte:
