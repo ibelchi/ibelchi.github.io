@@ -29,6 +29,8 @@ content\blog\
 **Nom del fitxer:** tot en minúscules, sense accents, espais substituïts per guions baixos `_`.
 Exemple: `la_meva_entrada.md`
 
+> ⚠️ **IMPORTANT**: El fitxer s'ha de crear sempre dins de la carpeta `content\blog\`. **No el creis a `public\blog\`**, ja que la carpeta `public` és el resultat automàtic del generador i els teus canvis es podrien perdre.
+
 ---
 
 ## Pas 2 — Escriu la capçalera i el contingut
@@ -64,15 +66,17 @@ La sintaxi és `[text de l'enllaç](URL)`:
 ### 📷 Imatges
 La sintaxi és `![text alternatiu](ruta_de_la_imatge)`:
 ```markdown
-![Descripció](assets/imatge.jpg)
+![Descripció](/assets/imatge.jpg)
 ```
+
+> 💡 **Ubicació de les imatges**: Guarda les imatges a la carpeta `static\assets\`. Zola les copiarà automàticament a `public\assets\`. En el text del post, fes servir sempre la ruta `/assets/nom_de_la_imatge.jpg` (amb la barra inicial `/`).
 
 ### ↔️ Dues imatges de costat i centrades
 Com que Markdown no ho permet directament, utilitza aquest codi HTML:
 ```html
 <div style="display: flex; justify-content: center; gap: 10px;">
-  <img src="assets/imatge1.jpg" alt="Descripció 1" style="width: 45%;">
-  <img src="assets/imatge2.jpg" alt="Descripció 2" style="width: 45%;">
+  <img src="/assets/imatge1.jpg" alt="Descripció 1" style="width: 45%;">
+  <img src="/assets/imatge2.jpg" alt="Descripció 2" style="width: 45%;">
 </div>
 ```
 
