@@ -207,6 +207,7 @@ main {
 /* ── Imatge de presentació (substitueix el globus) ── */
 .presentation-image {
     display: flex;
+    justify-content: center;
     animation: slideIn 0.6s ease-out;
 }
 
