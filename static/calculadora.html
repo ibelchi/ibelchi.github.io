@@ -48,6 +48,7 @@ input[readonly]{background:var(--line);color:var(--txt2);cursor:not-allowed}
 .btn.on:hover,.btn.pri:hover{opacity:.9;color:#fff}
 .chip{background:var(--pri-container);border:1px solid var(--pri);color:var(--pri);font-size:.75rem;padding:.2rem .5rem;border-radius:999px;cursor:pointer;margin:.1rem .2rem 0 0;font-family:var(--font-mono)}
 .chip:hover{background:var(--pri);color:#fff}
+.chip-hint{display:inline-block;font-size:.72rem;color:var(--txt2);font-style:italic}
 .fx{display:flex;align-items:center;gap:.3rem;background:var(--bg);padding:.4rem .8rem;border-radius:.5rem;border:1px solid var(--line);font-size:.8rem;color:var(--txt2)}
 .fx input{width:80px;padding:.2rem;text-align:center}
 .fx button{border:none;color:#fff;font-size:.7rem;padding:2px 6px;border-radius:4px;cursor:pointer;font-weight:bold;font-family:var(--font-mono)}
@@ -155,7 +156,7 @@ footer a{color:var(--bad)}
 <!-- PAS 3 -->
 <section class="step" id="step-3">
 <h2>3 · Preus d'entrada, stop i objectiu</h2>
-<p class="ajuda">Entra només quan el preu <b>superi el màxim de la vela de rebot</b> (confirmació). Toca els suggeriments blaus per omplir cada preu.</p>
+<p class="ajuda">Entra només quan el preu <b>superi el màxim de la vela de rebot</b> (confirmació). Toca els suggeriments de color per omplir cada preu.</p>
 <div class="grid">
   <div class="g"><label for="vela">Màxim de la vela de rebot</label><div class="iw"><span class="sm">€</span><input type="number" id="vela" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
   <div class="g"><label for="m-ent">Marge sobre el màxim (%)</label><div class="iw pct"><input type="number" id="m-ent" value="0.1" step="0.1" min="0" inputmode="decimal"><span>%</span></div></div>
@@ -238,8 +239,11 @@ const esp=x=>base==='EUR'?x*(v('fx')||1.08):x/(v('fx')||1.08);
 
 /* ---------- Càlculs ---------- */
 function usar(id,val){$(id).value=val.toFixed(2);calcular();}
-function chips(id,llista){
-  $(id).innerHTML=llista.filter(x=>x[1]>0).map(x=>`<button type="button" class="chip" onclick="usar('${x[2]}',${x[1]})">${x[0]}: ${f(x[1])} ${sym}</button>`).join('');
+function chips(id,llista,hint){
+  const vals=llista.filter(x=>x[1]>0);
+  $(id).innerHTML=vals.length
+    ? vals.map(x=>`<button type="button" class="chip" onclick="usar('${x[2]}',${x[1]})">${x[0]}: ${f(x[1])} ${sym}</button>`).join('')
+    : `<span class="chip-hint">${hint}</span>`;
 }
 
 function calcular(){
@@ -272,9 +276,9 @@ function calcular(){
 
   // Suggeriments d'entrada / stop / objectiu
   const suport=v('suport');
-  chips('s-ent',[['Trencament de la vela',v('vela')*(1+v('m-ent')/100),'entrada']]);
-  chips('s-sl',[['Sota el suport',suport*(1-v('m-sl')/100),'sl']]);
-  chips('s-tp',[['Cim anterior',cim,'tp'],['Extensió 1,272',rang>0?cim+.272*rang:0,'tp']]);
+  chips('s-ent',[['Trencament de la vela',v('vela')*(1+v('m-ent')/100),'entrada']],'Omple el "Màxim de la vela de rebot" per veure un suggeriment');
+  chips('s-sl',[['Sota el suport',suport*(1-v('m-sl')/100),'sl']],'Tria un suport al Pas 2 per veure un suggeriment');
+  chips('s-tp',[['Cim anterior',cim,'tp'],['Extensió 1,272',rang>0?cim+.272*rang:0,'tp']],'Omple el "Cim de la pujada" al Pas 2 per veure suggeriments');
 
   const entrada=v('entrada'),sl=v('sl'),tp=v('tp');
   const rpa=Math.abs(entrada-sl), bpa=Math.max(0,tp-entrada), rr=rpa>0?bpa/rpa:0;
