@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tutorial: quan entrar a comprar · Calculadora de Swing Trading</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#fbf9f4;--card:#ffffff;--txt:#1b1c19;--txt2:#49454e;
+  --pri:#62557e;--pri-container:#eaddff;--ok:#2f7a4d;--bad:#9e3d15;--warn:#a3660c;--line:#e4e2dd;
+  --font-mono:'JetBrains Mono',monospace;
+  --shadow-md:0 10px 20px rgba(98,85,126,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-mono)}
+body{
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3cturbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3e%3c/svg%3e");
+  color:var(--txt);padding:2rem 1rem;display:flex;justify-content:center;-webkit-font-smoothing:antialiased;line-height:1.7
+}
+.wrap{width:100%;max-width:800px;background:var(--card);border-radius:1.25rem;padding:2rem;border:1px solid var(--line);box-shadow:var(--shadow-md)}
+.top-link{display:inline-block;font-size:.85rem;color:var(--pri);text-decoration:none;margin-bottom:1rem}
+.top-link:hover{color:var(--bad)}
+h1{font-size:1.4rem;border-bottom:2px solid var(--line);padding-bottom:1rem;margin-bottom:1.2rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.1rem;color:var(--pri);margin:2rem 0 .6rem;font-weight:700}
+h3{font-size:.95rem;color:var(--txt);margin:1.3rem 0 .4rem;font-weight:700}
+p{font-size:.9rem;margin-bottom:.8rem}
+ol,ul{font-size:.9rem;margin:0 0 .8rem 1.3rem}
+li{margin-bottom:.4rem}
+code{background:var(--bg);border:1px solid var(--line);border-radius:.3rem;padding:.05rem .35rem;font-size:.82rem}
+.formula,.diagrama{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--pri);border-radius:.4rem;padding:.8rem 1rem;font-size:.8rem;margin:.8rem 0;overflow-x:auto;white-space:pre;line-height:1.4}
+.intro{font-size:.9rem;color:var(--txt2);margin-bottom:1.5rem;padding-bottom:1.2rem;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.5rem 0 1rem}
+th,td{padding:.5rem .6rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--txt2);font-weight:500;font-size:.78rem}
+.exemple{background:var(--pri-container);border-radius:.5rem;padding:.8rem 1rem;margin:.6rem 0;font-size:.85rem}
+.exemple b{color:var(--on-primary,var(--pri))}
+.avis{background:#fdf1ec;border:1px solid var(--bad);color:var(--bad);padding:.8rem 1rem;border-radius:.5rem;margin-top:2rem;font-size:.85rem}
+hr{border:none;border-top:1px solid var(--line);margin:2rem 0}
+footer{margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--line);text-align:center;font-size:.8rem}
+footer a{color:var(--pri);text-decoration:none}
+footer a:hover{color:var(--bad)}
+
+@media (max-width:640px){
+  body{padding:1rem .5rem}
+  .wrap{padding:1.25rem 1rem;border-radius:.9rem}
+  h1{font-size:1.15rem}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+  .formula,.diagrama{font-size:.72rem}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a href="calculadora.html" class="top-link">← Torna a la calculadora</a>
+<h1>Tutorial per a tontos: quan entrar a comprar</h1>
+<p class="intro">Aquest tutorial explica <b>només la primera part</b> de la Calculadora de Swing Trading — la pestanya "1 · Quan entrar", que inclou els passos 1, 2 i 3. Aquesta part et respon a una única pregunta: <i>si decidís comprar aquesta empresa, a quin preu hauria de fer-ho, i amb quin pla de sortida?</i> (La segona pestanya, "Quant comprar", és un tutorial a part.)</p>
+
+<h2>La idea de fons, abans de tocar cap camp</h2>
+<p>Imagina el preu d'una empresa com una muntanya russa:</p>
+<div class="diagrama">        📈 puja
+       ╱
+      ╱
+     ╱
+────●──────────────  ← preu d'avui
+     ╲
+      ╲___●            ← aquí es gira i torna a pujar ("suport")</div>
+<p>No vols comprar quan el preu encara està baixant (no saps fins on arribarà), ni quan ja ha pujat molt (és car i et quedes sense marge). <b>Vols comprar just quan toca fons i torna a girar cap amunt.</b></p>
+<p>Els passos 1, 2 i 3 serveixen, per aquest ordre, per:</p>
+<ol>
+<li>Comprovar que l'empresa està en una <b>tendència de fons positiva</b> (val la pena mirar-la).</li>
+<li>Trobar <b>on és probable que el preu es giri</b> (el "suport").</li>
+<li>Decidir <b>a quin preu exacte compraràs</b>, i <b>a quin preu vendràs</b> si l'operació va malament o si va bé.</li>
+</ol>
+
+<hr>
+
+<h2>Pas 1 · Actiu i tendència</h2>
+<h3>Què has d'omplir</h3>
+<p>Quatre preus, tots consultats al gràfic de l'empresa (Yahoo Finance, el teu bròker, etc.), referits a avui:</p>
+<table>
+<tr><th>Camp</th><th>Què és</th></tr>
+<tr><td>Preu actual</td><td>El preu de cotització d'avui mateix.</td></tr>
+<tr><td>M20</td><td>La mitjana dels últims 20 dies de cotització. Reacciona ràpid als canvis (curt termini).</td></tr>
+<tr><td>M50</td><td>La mitjana dels últims 50 dies. Una mica més lenta (mitjà termini).</td></tr>
+<tr><td>M200</td><td>La mitjana dels últims 200 dies (uns 9-10 mesos). Molt lenta: marca la tendència de fons.</td></tr>
+</table>
+<p><b>Per què mitjanes i no només el preu?</b> Perquè el preu sol dia a dia "sorolla" amunt i avall, i una mitjana suavitza aquest soroll perquè es vegi més clar cap a on va realment el valor.</p>
+<p><b>On les trobes</b>: a Yahoo Finance, al gràfic, pots afegir indicadors "MA(20)", "MA(50)", "MA(200)" — surten pintats directament sobre el gràfic, i si passes el cursor per sobre d'avui et donen el número exacte.</p>
+
+<h3>Què fa l'eina amb aquestes dades</h3>
+<p>Un cop les omples, et dona un petit diagnòstic automàtic (semàfor):</p>
+<ul>
+<li>✓ <b>Preu per sobre de la M200</b> → tendència de fons alcista (bon senyal).</li>
+<li>✓ <b>M50 per sobre de la M200</b> → la tendència és sana, no només un rebot puntual.</li>
+<li>Un tercer avís et diu si el preu ja ha "corregit" (baixat una mica) o encara no.</li>
+</ul>
+
+<div class="exemple"><b>Exemple teòric:</b> una empresa cotitza avui a 100 €. M20=98€, M50=92€, M200=80€.<br>→ Preu (100) &gt; M200 (80) ✓ i M50 (92) &gt; M200 (80) ✓ → tendència de fons alcista i sana. Val la pena seguir mirant-la.</div>
+<div class="exemple"><b>Exemple pràctic</b> (sessió real): Preu actual = 536,65 €, M20 = 463 €, M50 = 487 €, M200 = 426 €.<br>→ 536,65 &gt; 426 ✓ i 487 &gt; 426 ✓: tendència alcista i sana. Detall curiós: la M20 (463) és inferior a la M50 (487) — fa poc hi va haver una caiguda forta i la mitjana curta encara no s'ha recuperat del tot, típic d'un rebot que just comença.</div>
+
+<hr>
+
+<h2>Pas 2 · Cim, vall i suports</h2>
+<h3>Què has d'omplir</h3>
+<div class="diagrama">  cim
+   ●
+  ╱ ╲
+ ╱   ╲___●  ← vall actual (correcció en marxa)
+●
+inici</div>
+<table>
+<tr><th>Camp</th><th>Què és</th><th>Com el trobes</th></tr>
+<tr><td>Inici de la pujada</td><td>El mínim des d'on va arrencar la pujada que ara estàs mirant (normalment 1-4 mesos abans del cim).</td><td>El punt més baix al gràfic, just abans que el preu comencés a pujar amb força.</td></tr>
+<tr><td>Cim de la pujada</td><td>El màxim que ha arribat a tocar en aquesta pujada.</td><td>El pic més alt dels últims ~90 dies.</td></tr>
+<tr><td>Vall actual</td><td>El mínim que ha tocat el preu durant la correcció posterior al cim, fins avui.</td><td>Si hi ha diverses valls després del cim, agafa la més baixa de totes.</td></tr>
+</table>
+<p><b>Avís:</b> de vegades la correcció és tan forta que la "vall actual" baixa fins i tot per sota de l'"inici de la pujada" — no és un error, només vol dir que la correcció ha estat profunda i cal anar amb més compte.</p>
+
+<h3>Què calcula l'eina</h3>
+<ul>
+<li><b>Correcció (%)</b>: quant ha baixat el preu des del cim fins a la vall → <code>(Cim − Vall) ÷ Cim × 100</code>.</li>
+<li><b>Taula de suports possibles</b>: 6 nivells de preu on el mercat sol girar-se — Fibonacci 38,2% / 50% / 61,8% (nivells matemàtics entre l'inici i el cim) i les mateixes M20/M50/M200 del pas 1.</li>
+</ul>
+
+<h3>Com triar el suport (el pas important)</h3>
+<ol>
+<li><b>Descarta els que ja s'han trencat</b>: si la taula diu "(preu per sota)" al costat d'un nivell, el preu ja l'ha travessat — ja no serveix.</li>
+<li>Dels que queden, <b>comprova al gràfic real</b> si el preu ha tocat i rebotat a prop d'algun recentment. Aquell és el més fiable.</li>
+<li>Si cap coincideix exactament, prioritza el nivell vàlid més proper al preu actual (stop més ajustat) o un de més lluny si vols més marge.</li>
+<li>Clica <b>"Usar com a suport"</b> a la fila triada — omple el camp "Suport triat" automàticament.</li>
+</ol>
+
+<div class="exemple"><b>Exemple teòric:</b> Inici = 80€, Cim = 120€. Rang = 40€.<br>
+Fib 38,2% = 120−0,382×40 = <b>104,7€</b> · Fib 50% = <b>100€</b> · Fib 61,8% = 120−0,618×40 = <b>95,3€</b><br>
+Si avui el preu és 97€ i ja ha baixat per sota dels 104,7 i els 100, el primer nivell que <b>encara no ha trencat</b> és 95,3€ → probablement el millor candidat.</div>
+<div class="exemple"><b>Exemple pràctic:</b> Inici = 453€, Cim = 629,42€, Vall actual = 414€ → Correcció = (629,42−414)÷629,42 = <b>34,2%</b> (bastant profunda).<br>Si el preu ha tocat els 414€ i ha tornat a pujar des d'allà (confirmat al gràfic), <b>414€ és el suport triat</b> — és un fet real, no una teoria.</div>
+
+<hr>
+
+<h2>Pas 3 · Preus d'entrada, stop i objectiu</h2>
+<p>Aquesta és la part on decideixes els tres preus concrets de l'operació.</p>
+<div class="diagrama">          entrada (compres aquí)
+             ↑
+  ────●──────┤──────  ← preu d'avui
+       ╲     │
+        ╲___●┘
+          suport
+           │
+         stop (vens aquí si falla)</div>
+
+<h3>Què has d'omplir primer</h3>
+<table>
+<tr><th>Camp</th><th>Què és</th></tr>
+<tr><td>Màxim de la vela de rebot</td><td>El preu més alt del dia concret en què vas veure que el preu començava a rebotar des del suport. Aquesta dada l'has de mirar tu al gràfic.</td></tr>
+<tr><td>Marge sobre el màxim (%)</td><td>Quant per sobre d'aquest màxim vols esperar per confirmar el trencament (per defecte 0,1%).</td></tr>
+<tr><td>Marge sota el suport (%)</td><td>Quant per sota del suport posaràs l'stop, per no sortir per una petita oscil·lació (per defecte 1%).</td></tr>
+<tr><td>Ràtio B/R mínima acceptable</td><td>Quant vols guanyar com a mínim per cada € que arrisques (per defecte 2, el doble del que arrisques).</td></tr>
+</table>
+
+<h3>Els tres preus finals</h3>
+<p>Un cop tens el màxim de la vela de rebot, apareixen botons de color sota els camps "Preu d'entrada", "Stop Loss" i "Objectiu" amb un valor ja calculat:</p>
+<div class="formula">Entrada suggerida = Màxim de la vela × (1 + marge d'entrada)
+Stop suggerit = Suport × (1 − marge de stop)
+Objectiu suggerit = Cim anterior (o una mica més amunt)</div>
+
+<h3>El resultat clau</h3>
+<p>Amb els tres preus, l'eina calcula la <b>Ràtio Benefici/Risc</b>: quant pots guanyar per cada unitat que arrisques. Si surt per sota de la mínima fixada, l'eina avisa en vermell que l'operació no compensa el risc.</p>
+
+<div class="exemple"><b>Exemple teòric:</b> Suport = 95€. Vela de rebot = 98€.<br>
+Entrada ≈ 98,10€ · Stop ≈ 94,05€ · Risc/acció ≈ 4,05€<br>
+Objectiu 110€ → Benefici/acció = 11,90€ → Ràtio B/R ≈ <b>2,9 : 1</b> ✓ (per sobre del mínim 2:1)</div>
+<div class="exemple"><b>Exemple pràctic:</b> Suport = 414€. Màxim del dia del rebot = 420€.<br>
+Entrada ≈ 420,42€ · Stop ≈ 409,86€ · Risc/acció ≈ 10,56€<br>
+Objectiu = cim anterior (629,42€) → Benefici/acció ≈ 209€ → Ràtio B/R ≈ <b>19,8 : 1</b> (excepcionalment alta, típic quan el suport està molt lluny del cim anterior)</div>
+
+<hr>
+
+<h2>Glossari ràpid</h2>
+<table>
+<tr><th>Terme</th><th>En una frase</th></tr>
+<tr><td>Tendència</td><td>Direcció general del preu (amunt, avall, o lateral).</td></tr>
+<tr><td>Mitjana mòbil (M20/M50/M200)</td><td>Mitjana dels últims N dies; suavitza el "soroll" del preu.</td></tr>
+<tr><td>Suport</td><td>Nivell de preu on el mercat sol aturar una caiguda.</td></tr>
+<tr><td>Correcció</td><td>Baixada temporal dins d'una pujada més llarga.</td></tr>
+<tr><td>Fibonacci</td><td>Nivells matemàtics que molts inversors vigilen com a possibles suports.</td></tr>
+<tr><td>Vela de rebot</td><td>La sessió (dia) on es confirma visualment que el preu torna a pujar.</td></tr>
+<tr><td>Stop Loss</td><td>Preu de venda d'emergència si l'operació va malament.</td></tr>
+<tr><td>Take Profit / Objectiu</td><td>Preu de venda de benefici si l'operació va bé.</td></tr>
+<tr><td>Ràtio Benefici/Risc (B/R)</td><td>Quant guanyes per cada unitat que arrisques.</td></tr>
+</table>
+
+<h2>Errors típics a evitar</h2>
+<ul>
+<li><b>Inici de la pujada més alt que el Cim</b>: revisa que realment hagis agafat el mínim abans de la pujada.</li>
+<li><b>Triar un suport ja "trencat"</b> (marcat amb "preu per sota"): el preu ja l'ha superat, no té sentit.</li>
+<li><b>Oblidar actualitzar el Pas 1</b> quan canvies d'empresa o el preu ha canviat: si no ho fas, tota la taula de suports sortirà malament.</li>
+<li><b>Confondre "Suport triat" amb "Preu d'entrada"</b>: el suport és la referència, no el preu al qual compres.</li>
+</ul>
+
+<div class="avis">Aquest document i la calculadora són material formatiu general, no assessorament financer. Cap estratègia garanteix guanys.</div>
+
+<footer><a href="calculadora.html">← Torna a la calculadora</a></footer>
+</div>
+</body>
+</html>

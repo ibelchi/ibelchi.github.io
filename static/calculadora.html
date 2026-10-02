@@ -103,7 +103,7 @@ footer a{color:var(--bad)}
 <body>
 <div class="wrap">
 <h1>Calculadora de Swing Trading</h1>
-<p style="text-align:center;margin-top:-.8rem;margin-bottom:1.2rem"><a href="instruccions.html" style="font-size:.8rem;color:var(--pri);text-decoration:none">📖 Instruccions i glossari</a></p>
+<p style="text-align:center;margin-top:-.8rem;margin-bottom:1.2rem"><a href="instruccions.html" style="font-size:.8rem;color:var(--pri);text-decoration:none">📖 Instruccions i glossari</a> · <a href="tutorial-quan-entrar.html" style="font-size:.8rem;color:var(--pri);text-decoration:none">🎓 Tutorial: quan entrar</a></p>
 
 <div class="tabs">
   <button type="button" class="tab-btn on" id="t-a" onclick="switchTab('a')">1 · Quan entrar</button>
@@ -118,7 +118,7 @@ footer a{color:var(--bad)}
 </div>
 
 <div class="tab-panel active" id="tab-a">
-<p id="step-indicator" style="text-align:center;font-size:.78rem;color:var(--txt2);margin:0 0 1rem">Pas 1 de 2 · Analitza la tendència</p>
+<p id="step-indicator" style="text-align:center;font-size:.78rem;color:var(--txt2);margin:0 0 1rem">Pas 1 de 3 · Analitza la tendència</p>
 
 <!-- PAS 1 -->
 <h2>1 · Actiu i tendència</h2>
@@ -147,12 +147,6 @@ footer a{color:var(--bad)}
 </div>
 </section>
 
-<p style="text-align:center;margin-top:1.5rem"><button type="button" class="btn pri" onclick="switchTab('b')">Continua a "Quant comprar" →</button></p>
-</div><!-- /tab-a -->
-
-<div class="tab-panel" id="tab-b">
-<p id="step-indicator-b" style="text-align:center;font-size:.78rem;color:var(--txt2);margin:0 0 1rem">Pas 1 de 2 · Defineix entrada, stop i objectiu</p>
-
 <!-- PAS 3 -->
 <section class="step" id="step-3">
 <h2>3 · Preus d'entrada, stop i objectiu</h2>
@@ -173,6 +167,12 @@ footer a{color:var(--bad)}
   <div class="t"><label>Preu màxim d'entrada per a la ràtio mínima</label><div class="valor" id="r-max">–</div><div class="sub" id="r-max-s"></div></div>
 </div>
 </section>
+
+<p style="text-align:center;margin-top:1.5rem"><button type="button" class="btn pri" onclick="switchTab('b')">Continua a "Quant comprar" →</button></p>
+</div><!-- /tab-a -->
+
+<div class="tab-panel" id="tab-b">
+<p id="step-indicator-b" style="text-align:center;font-size:.78rem;color:var(--txt2);margin:0 0 1rem">Quants diners hi poses, segons el risc que vulguis assumir</p>
 
 <!-- PAS 4 -->
 <section class="step" id="step-4">
@@ -197,7 +197,7 @@ footer a{color:var(--bad)}
 
 <footer>
   <p>Formació general, no assessorament financer. Cap estratègia garanteix guanys.</p>
-  <p><a href="instruccions.html" style="color:var(--pri)">📖 Instruccions i glossari</a></p>
+  <p><a href="instruccions.html" style="color:var(--pri)">📖 Instruccions i glossari</a> · <a href="tutorial-quan-entrar.html" style="color:var(--pri)">🎓 Tutorial: quan entrar</a></p>
   <p>Basat en la calculadora de <strong>Mauricio Ledesma</strong> i <strong>Samuel Ledesma</strong> (&copy; 2026), llicència
   <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a>. Aquesta versió és una obra derivada.</p>
 </footer>
@@ -332,8 +332,8 @@ function calcular(){
 
   // Guia progressiva
   const d1=preu>0, d2=d1&&suport>0, d3=entrada>0&&sl>0&&tp>0, d4=hiHaDades&&acc>0;
-  $('step-indicator').textContent=!d1?'Pas 1 de 2 · Analitza la tendència':!d2?'Pas 2 de 2 · Tria un suport':'Anàlisi completa ✓';
-  $('step-indicator-b').textContent=!d3?'Pas 1 de 2 · Defineix entrada, stop i objectiu':!d4?'Pas 2 de 2 · Ajusta el risc':'Mida de posició calculada ✓';
+  $('step-indicator').textContent=!d1?'Pas 1 de 3 · Analitza la tendència':!d2?'Pas 2 de 3 · Tria un suport':!d3?'Pas 3 de 3 · Defineix entrada, stop i objectiu':'Preparat per decidir quant comprar ✓';
+  $('step-indicator-b').textContent=d4?'Mida de posició calculada ✓':'Quants diners hi poses, segons el risc que vulguis assumir';
 
   // Resum fix sempre visible
   $('qs-acc').textContent=$('r-acc').textContent;
