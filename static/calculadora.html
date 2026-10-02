@@ -32,7 +32,7 @@ h2::after{content:'';flex:1;height:1px;background:var(--line)}
 .fila{display:flex;justify-content:center;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.5rem}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.2rem;margin-bottom:1rem}
 .g{display:flex;flex-direction:column;gap:.4rem}
-label{font-size:.8rem;color:var(--txt2);font-weight:500}
+label{font-size:.8rem;color:var(--txt2);font-weight:500;min-height:2.3em;line-height:1.25;display:flex;align-items:flex-end}
 .iw{position:relative;display:flex;align-items:center}
 .iw>span{position:absolute;left:10px;color:var(--txt2);font-weight:bold}
 .iw.pct>span{left:auto;right:10px}
@@ -142,7 +142,7 @@ footer a{color:var(--bad)}
 </div>
 <div class="table-scroll"><table><thead><tr><th>Suport possible</th><th>Preu</th><th>Distància al preu actual</th><th></th></tr></thead><tbody id="taula"></tbody></table></div>
 <div class="grid">
-  <div class="g"><label for="suport">Suport triat (base de l'stop)</label><div class="iw"><span class="sm">€</span><input type="number" id="suport" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div><div class="esp" data-esp="suport"></div></div>
+  <div class="g" style="max-width:320px"><label for="suport">Suport triat (base de l'stop)</label><div class="iw"><span class="sm">€</span><input type="number" id="suport" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div><div class="esp" data-esp="suport"></div></div>
 </div>
 </section>
 
