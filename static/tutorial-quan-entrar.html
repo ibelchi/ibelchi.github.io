@@ -49,6 +49,10 @@ footer a:hover{color:var(--bad)}
   table{display:block;overflow-x:auto;white-space:nowrap}
   .formula,.diagrama{font-size:.72rem}
 }
+
+.grafic{margin:1rem 0;border:1px solid var(--line);border-radius:.6rem;overflow:hidden;background:var(--bg)}
+.grafic img{display:block;width:100%;height:auto}
+.grafic figcaption{padding:.65rem .85rem;color:var(--txt2);font-size:.76rem;line-height:1.6;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -60,13 +64,7 @@ footer a:hover{color:var(--bad)}
 
 <h2>La idea de fons, abans de tocar cap camp</h2>
 <p>Imagina el preu d'una empresa com una muntanya russa:</p>
-<div class="diagrama">        📈 puja
-       ╱
-      ╱
-     ╱
-────●──────────────  ← preu d'avui
-     ╲
-      ╲___●            ← aquí es gira i torna a pujar ("suport")</div>
+<figure class="grafic"><img src="assets/caiguda-suport-rebot.svg" alt="El preu baixa fins a una zona de suport i després rebota cap amunt." width="900" height="520" loading="lazy" decoding="async"><figcaption>El suport és una zona on la caiguda pot frenar; cal observar si el preu rebota.</figcaption></figure>
 <p>No vols comprar quan el preu encara està baixant (no saps fins on arribarà), ni quan ja ha pujat molt (és car i et quedes sense marge). <b>Vols comprar just quan toca fons i torna a girar cap amunt.</b></p>
 <p>Els passos 1, 2 i 3 serveixen, per aquest ordre, per:</p>
 <ol>
@@ -105,12 +103,7 @@ footer a:hover{color:var(--bad)}
 
 <h2>Pas 2 · Cim, vall i suports</h2>
 <h3>Què has d'omplir</h3>
-<div class="diagrama">  cim
-   ●
-  ╱ ╲
- ╱   ╲___●  ← vall actual (correcció en marxa)
-●
-inici</div>
+<figure class="grafic"><img src="assets/cim-vall-nivells.svg" alt="Pujada de 80 a 120 euros i correcció fins a 97 euros, amb nivells de Fibonacci a 104,7, 100 i 95,3 euros." width="900" height="520" loading="lazy" decoding="async"><figcaption>Exemple teòric del pas 2: inici, cim, vall actual i tres nivells possibles de suport.</figcaption></figure>
 <table>
 <tr><th>Camp</th><th>Què és</th><th>Com el trobes</th></tr>
 <tr><td>Inici de la pujada</td><td>El mínim des d'on va arrencar la pujada que ara estàs mirant (normalment 1-4 mesos abans del cim).</td><td>El punt més baix al gràfic, just abans que el preu comencés a pujar amb força.</td></tr>
@@ -142,14 +135,7 @@ Si avui el preu és 97€ i ja ha baixat per sota dels 104,7 i els 100, el prime
 
 <h2>Pas 3 · Preus d'entrada, stop i objectiu</h2>
 <p>Aquesta és la part on decideixes els tres preus concrets de l'operació.</p>
-<div class="diagrama">          entrada (compres aquí)
-             ↑
-  ────●──────┤──────  ← preu d'avui
-       ╲     │
-        ╲___●┘
-          suport
-           │
-         stop (vens aquí si falla)</div>
+<figure class="grafic"><img src="assets/entrada-stop-objectiu.svg" alt="Veles baixistes fins al suport de 95 euros i vela verda de rebot amb màxim de 98 euros. Entrada a 98,10, stop a 94,05 i objectiu a 110 euros." width="900" height="520" loading="lazy" decoding="async"><figcaption>Exemple teòric del pas 3. La línia discontínua il·lustra una evolució possible fins a l’objectiu.</figcaption></figure>
 
 <h3>Què has d'omplir primer</h3>
 <table>
