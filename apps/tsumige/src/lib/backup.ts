@@ -21,11 +21,15 @@ export async function getBackup(): Promise<Backup> {
   if (current.session?.user.id !== owner) throw new Error('La sessió ha canviat. Torna a preparar la còpia.')
   return { app: 'tsumige', format_version: 1, exported_at: new Date().toISOString(), user_id: owner, fitxes_joc, exemplars, experiencies, proposits }
 }
+// Kept for the archived one-off import tools; Settings exports the ZIP instead.
 export function downloadBackup(backup: Backup) {
   downloadFile(JSON.stringify(backup, null, 2), `tsumige-${backup.exported_at.replace(/[:.]/g, '-')}.json`, 'application/json;charset=utf-8')
 }
 export function downloadFile(content: string, filename: string, mime: string) {
-  const url = URL.createObjectURL(new Blob([content], { type: mime }))
+  downloadBlob(new Blob([content], { type: mime }), filename)
+}
+export function downloadBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.href = url
   link.download = filename

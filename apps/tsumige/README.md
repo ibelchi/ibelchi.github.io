@@ -14,6 +14,10 @@ El workflow del blog compila aquesta aplicació abans de construir el lloc amb Z
 
 La clau publishable de Supabase és pública per disseny; la protecció de les dades es fa amb autenticació i RLS. La configuració del workflow conté exclusivament la URL i aquesta clau pública.
 
-La versió pública exclou els lots personals d’importació Steam/Epic, Excel, còpies JSON/CSV, captures, logs, credencials i documentació privada de treball. Les importacions antigues continuen disponibles només al projecte local. Les dades de la col·lecció es consulten de Supabase, no s’incorporen al codi ni a la compilació.
+La versió pública exclou els lots personals d’importació Steam/Epic, Excel, còpies JSON/CSV, captures, logs, credencials i documentació privada de treball. Els apartats per importar Steam i Epic s’han retirat de Configuració, també en local. Les dades de la col·lecció es consulten de Supabase, no s’incorporen al codi ni a la compilació.
 
 Els textos i notes propis de l’usuari tenen CC BY-NC-SA 4.0. Aquesta indicació no inclou les portades de tercers, els logotips ni el codi.
+## Còpia de seguretat
+
+Configuració exporta un ZIP amb les dades completes, els fitxers de les portades i un informe que vincula cada imatge amb el joc. Les descàrregues fallides i els jocs sense portada queden identificats; la restauració automàtica encara està pendent. La còpia privada no s’ha de desar en aquest repositori públic.
+
