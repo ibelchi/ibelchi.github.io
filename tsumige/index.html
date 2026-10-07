@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="ca">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tsumigē — Nova adreça</title>
+    <script>
+      const route = location.hash.startsWith('#/') ? location.hash : '#/' + location.search;
+      location.replace('/Tsumige/' + route);
+    </script>
+  </head>
+  <body>
+    <p>Tsumigē té una nova adreça. <a href="/Tsumige/">Obre l’aplicació</a>.</p>
+  </body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ca">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | Israel Belchi</title>
+    <meta name="description" content="Galeria fotogràfica d'Israel Belchi.">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <main>
+        <div class="content-wrapper">
+
+            <section class="profile-section">
+                <div class="profile-img-container">
+                    <img src="assets/portrait.png" alt="Fotografia de perfil d'Israel Belchi">
+                </div>
+                <a href="index.html" class="terminal-link back-link">[\←]</a>
+            </section>
+
+            <section class="bubble-section inner-section">
+
+                <div class="inner-grid gallery-grid">
+                    <!-- Cada item és una foto quadrada. Afegeix o elimina <div class="gallery-item"> -->
+                    <div class="gallery-item">
+                        <img src="assets/gallery/01.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/02.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/03.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/04.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/05.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/06.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/07.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/08.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/09.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/10.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/11.jpg" alt="">
+                    </div>
+                    <div class="gallery-item">
+                        <img src="assets/gallery/12.jpg" alt="">
+                    </div>
+                    <!-- Afegeix més ítems aquí seguint el mateix patró -->
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Imatge ampliada">
+        <button class="lightbox-close terminal-link" id="lightbox-close">[\x]</button>
+        <img class="lightbox-img" id="lightbox-img" src="" alt="">
+    </div>
+
+    <footer>
+        <p class="copyright">© 2026 Israel Belchi</p>
+    </footer>
+
+    <script>
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxClose = document.getElementById('lightbox-close');
+
+        document.querySelectorAll('.gallery-item img').forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', e => {
+            if (e.target === lightbox) closeLightbox();
+        });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') closeLightbox();
+        });
+    </script>
+</body>
+
+</html>

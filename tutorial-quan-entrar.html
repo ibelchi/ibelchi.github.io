@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quan entrar a comprar: guia pas a pas · Calculadora de Swing Trading</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#fbf9f4;--card:#ffffff;--txt:#1b1c19;--txt2:#49454e;
+  --pri:#62557e;--pri-container:#eaddff;--ok:#2f7a4d;--bad:#9e3d15;--warn:#a3660c;--line:#e4e2dd;
+  --font-mono:'JetBrains Mono',monospace;
+  --shadow-md:0 10px 20px rgba(98,85,126,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-mono)}
+body{
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3cturbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3e%3c/svg%3e");
+  color:var(--txt);padding:2rem 1rem;display:flex;justify-content:center;-webkit-font-smoothing:antialiased;line-height:1.7
+}
+.wrap{width:100%;max-width:800px;background:var(--card);border-radius:1.25rem;padding:2rem;border:1px solid var(--line);box-shadow:var(--shadow-md)}
+.top-link{display:inline-block;font-size:.85rem;color:var(--pri);text-decoration:none;margin-bottom:1rem}
+.top-link:hover{color:var(--bad)}
+h1{font-size:1.4rem;border-bottom:2px solid var(--line);padding-bottom:1rem;margin-bottom:1.2rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.1rem;color:var(--pri);margin:2rem 0 .6rem;font-weight:700}
+h3{font-size:.95rem;color:var(--txt);margin:1.3rem 0 .4rem;font-weight:700}
+p{font-size:.9rem;margin-bottom:.8rem}
+ol,ul{font-size:.9rem;margin:0 0 .8rem 1.3rem}
+li{margin-bottom:.4rem}
+code{background:var(--bg);border:1px solid var(--line);border-radius:.3rem;padding:.05rem .35rem;font-size:.82rem}
+.formula,.diagrama{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--pri);border-radius:.4rem;padding:.8rem 1rem;font-size:.8rem;margin:.8rem 0;overflow-x:auto;white-space:pre;line-height:1.4}
+.intro{font-size:.9rem;color:var(--txt2);margin-bottom:1.5rem;padding-bottom:1.2rem;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.5rem 0 1rem}
+th,td{padding:.5rem .6rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--txt2);font-weight:500;font-size:.78rem}
+.exemple{background:var(--pri-container);border-radius:.5rem;padding:.8rem 1rem;margin:.6rem 0;font-size:.85rem}
+.exemple b{color:var(--on-primary,var(--pri))}
+.avis{background:#fdf1ec;border:1px solid var(--bad);color:var(--bad);padding:.8rem 1rem;border-radius:.5rem;margin-top:2rem;font-size:.85rem}
+hr{border:none;border-top:1px solid var(--line);margin:2rem 0}
+footer{margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--line);text-align:center;font-size:.8rem}
+footer a{color:var(--pri);text-decoration:none}
+footer a:hover{color:var(--bad)}
+
+@media (max-width:640px){
+  body{padding:1rem .5rem}
+  .wrap{padding:1.25rem 1rem;border-radius:.9rem}
+  h1{font-size:1.15rem}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+  .formula,.diagrama{font-size:.72rem}
+}
+.grafic{margin:1rem 0;border:1px solid var(--line);border-radius:.6rem;overflow:hidden;background:var(--bg)}
+.grafic img{display:block;width:100%;height:auto}
+.grafic figcaption{padding:.7rem .85rem;color:var(--txt2);font-size:.76rem;line-height:1.6;border-top:1px solid var(--line)}
+.grafic a,.fonts a{color:var(--pri)}
+.fonts{font-size:.76rem}
+@media(max-width:640px){table{white-space:normal}th,td{min-width:100px}}
+</style>
+</head>
+<body><main class="wrap">
+<a href="calculadora.html" class="top-link">← Torna a la calculadora</a>
+<h1>Quan entrar a comprar: guia pas a pas</h1>
+<p class="intro">Guia de la pestanya «1 · Quan entrar» de la Calculadora de Swing Trading. Aprendràs a llegir les dades, observar un possible suport i preparar una entrada amb dues sortides: si el preu baixa i si puja. La quantitat d’accions correspon a la pestanya «Quant comprar».</p>
+<h2>Abans de començar: què estem buscant?</h2>
+<p>No podem saber per avançat on és el mínim definitiu. Busquem una situació concreta: el preu ha baixat, sembla frenar en una zona i comença a rebotar. A partir d’aquí preparem un pla, perquè també podria tornar a baixar.</p>
+<p><b>Com llegir els gràfics:</b> d’esquerra a dreta passa el temps; de baix a dalt augmenta el preu. Una línia que baixa indica que el preu disminueix. Una línia horitzontal marca un nivell de referència, no una barrera que el preu no pugui travessar.</p>
+<figure class="grafic"><a href="assets/caiguda-suport-rebot.svg" target="_blank" rel="noopener" aria-label="Amplia el gràfic: Caiguda de 120 a 95 euros i rebot fins a 97,50 euros, en tres punts numerats."><img src="assets/caiguda-suport-rebot.svg" alt="Caiguda de 120 a 95 euros i rebot fins a 97,50 euros, en tres punts numerats." width="900" height="600" loading="lazy" decoding="async"></a><figcaption>Segueix els punts 1 → 2 → 3. La franja verda marca la zona del possible suport. <a href="assets/caiguda-suport-rebot.svg" target="_blank" rel="noopener">Amplia el gràfic ↗</a></figcaption></figure>
+<ol><li><b>Caiguda:</b> el preu passa de 120 € cap a 95 €.</li><li><b>Possible suport:</b> als 95 € la caiguda frena. Encara podria continuar baixant.</li><li><b>Rebot:</b> després el preu puja fins a tancar una sessió a 97,50 €. Això és una observació, no una garantia.</li></ol>
+<div class="exemple"><b>Un únic exemple per a tota la guia.</b> Una empresa fictícia puja de 80 € a 120 €, baixa fins a 95 € i després rebota. En el moment que estudiem l’entrada, la sessió de rebot ja ha acabat: el seu màxim és 98 € i el preu de tancament és 97,50 €. Totes les dades són inventades.</div>
+<h2>Pas 1 · Comprovar la tendència de fons</h2>
+<p>Una mitjana mòbil és el preu mitjà de les últimes sessions. Suavitza les oscil·lacions per ajudar a veure la tendència. M20, M50 i M200 fan servir 20, 50 i 200 sessions respectivament; no són dies naturals.</p>
+<table><tr><th>Camp</th><th>Valor de l’exemple</th><th>Què mires</th></tr><tr><td>Preu actual</td><td>97,50 €</td><td>La cotització del moment que analitzes.</td></tr><tr><td>M20</td><td>103 €</td><td>La mitjana més curta de les tres.</td></tr><tr><td>M50</td><td>96 €</td><td>Una referència de mitjà termini.</td></tr><tr><td>M200</td><td>88 €</td><td>Una referència de llarg termini.</td></tr></table>
+<p>Consulta els quatre valors per al mateix actiu i moment, en un gràfic diari del teu portal financer o bròker. Afegeix les mitjanes de 20, 50 i 200 sessions i comprova si l’eina està configurada amb mitjanes simples (SMA) o exponencials (EMA): poden donar valors diferents.</p>
+<div class="exemple"><b>Lectura de l’exemple:</b> 97,50 &gt; 88 i 96 &gt; 88: el preu i la M50 estan per sobre de la M200. Són indicis compatibles amb una tendència de fons alcista. El preu està per sota de la M20 (103 €), cosa compatible amb la caiguda recent.</div>
+<p><b>Què significa el semàfor?</b> Resumeix les regles de la calculadora. Un resultat positiu permet continuar l’anàlisi, però no demostra que l’empresa sigui una bona inversió ni que la propera operació sortirà bé. La direcció de les mitjanes i l’evolució del preu també importen.</p>
+<h2>Pas 2 · Identificar inici, cim, vall i possible suport</h2>
+<p>Mira primer la pujada i després la baixada. La <b>correcció</b> és aquesta baixada després del cim; només amb això no sabem si serà temporal o si començarà una tendència baixista.</p>
+<figure class="grafic"><a href="assets/cim-vall-nivells.svg" target="_blank" rel="noopener" aria-label="Amplia el gràfic: Inici a 80 euros, cim a 120 i vall a 95; nivells possibles a 104,72, 100 i 95,28 euros."><img src="assets/cim-vall-nivells.svg" alt="Inici a 80 euros, cim a 120 i vall a 95; nivells possibles a 104,72, 100 i 95,28 euros." width="900" height="600" loading="lazy" decoding="async"></a><figcaption>Els punts numerats identifiquen l’inici, el cim i la vall. Les línies discontínues són nivells calculats, no moviments del preu. <a href="assets/cim-vall-nivells.svg" target="_blank" rel="noopener">Amplia el gràfic ↗</a></figcaption></figure>
+<table><tr><th>Camp</th><th>Valor</th><th>Com el reconeixes</th></tr><tr><td>Inici de la pujada</td><td>80 €</td><td>El mínim des d’on arrenca el tram alcista que estudies.</td></tr><tr><td>Cim de la pujada</td><td>120 €</td><td>El màxim d’aquell mateix tram.</td></tr><tr><td>Vall actual</td><td>95 €</td><td>El mínim observat després del cim, fins al moment de l’anàlisi.</td></tr></table>
+<div class="exemple"><b>Correcció:</b> (120 − 95) ÷ 120 × 100 = <b>20,83%</b>. El preu ha perdut aproximadament una cinquena part del valor que tenia al cim. Aquest percentatge descriu el que ja ha passat, no quant queda per baixar.</div>
+<h3>Com escollir un suport?</h3>
+<p>Un <b>suport</b> és una zona on observes que la pressió baixista pot frenar. Un mínim seguit d’un rebot és un primer indici; diverses reaccions en aquella zona aporten més context. En l’exemple fem servir <b>95 € com a possible suport</b>, perquè hi hem observat la frenada i el rebot.</p>
+<ol><li>Revisa els nivells que mostra la calculadora, però comprova’ls al gràfic.</li><li>Si el preu està per sota d’un nivell, no el tractis com un suport vigent sota el preu. Un nivell travessat podria actuar com a resistència o recuperar-se més endavant.</li><li>Busca una zona on el preu hagi reaccionat. La proximitat al preu actual, per si sola, no fa que sigui més fiable.</li><li>Si una fila encaixa amb la zona observada, prem «Usar com a suport». Si el camp permet introduir-lo manualment, pots escriure el nivell observat. Si no trobes una referència clara, pots esperar.</li></ol>
+<h3>Què són les línies de Fibonacci?</h3>
+<p>Són nivells calculats a partir de l’inici i el cim que alguns operadors observen com a possibles zones de reacció. <b>No prediuen on es girarà el preu.</b> La calculadora també mostra M20, M50 i M200 com a referències possibles.</p>
+<table><tr><th>Nivell</th><th>Càlcul amb inici 80 € i cim 120 €</th></tr><tr><td>38,2%</td><td>120 − 0,382 × 40 = 104,72 €</td></tr><tr><td>50%</td><td>120 − 0,50 × 40 = 100 €</td></tr><tr><td>61,8%</td><td>120 − 0,618 × 40 = 95,28 €</td></tr></table>
+<p>El 50% s’inclou habitualment en aquesta eina, tot i que no és una proporció de Fibonacci. En el nostre exemple, 95,28 € queda a prop del mínim observat de 95 €. Aquesta coincidència dona una referència per estudiar, però no converteix la zona en un suport garantit.</p>
+<h2>Pas 3 · Preparar entrada, stop i objectiu</h2>
+<h3>Primer: què és una vela?</h3>
+<p>En un gràfic diari, cada <b>vela</b> resumeix una sessió: el cos mostra l’obertura i el tancament; les línies fines, anomenades metxes, arriben al mínim i al màxim. En els nostres gràfics, verd vol dir que el tancament supera l’obertura i vermell, que és inferior.</p>
+<p>La <b>vela de rebot</b> de l’exemple obre a 95,60 €, toca un mínim de 95,20 €, arriba a un màxim de 98 € i tanca a 97,50 €. La sessió anterior havia arribat als 95 €. Per al camp «Màxim de la vela de rebot» introduïm <b>98 €</b>, no el tancament. Una vela verda, tota sola, no confirma un canvi de tendència.</p>
+<figure class="grafic"><a href="assets/entrada-stop-objectiu.svg" target="_blank" rel="noopener" aria-label="Amplia el gràfic: Quatre veles baixistes i una vela de rebot amb màxim de 98 euros; entrada a 98,10, suport a 95, stop a 94,05 i objectiu a 110 euros."><img src="assets/entrada-stop-objectiu.svg" alt="Quatre veles baixistes i una vela de rebot amb màxim de 98 euros; entrada a 98,10, suport a 95, stop a 94,05 i objectiu a 110 euros." width="900" height="600" loading="lazy" decoding="async"></a><figcaption>Les veles mostren sessions observades. Les quatre línies indiquen els nivells del pla; l’objectiu encara no s’ha assolit. <a href="assets/entrada-stop-objectiu.svg" target="_blank" rel="noopener">Amplia el gràfic ↗</a></figcaption></figure>
+<p><b>En aquest gràfic, primer mira les veles de l’esquerra:</b> baixen fins a la zona de 95 € i l’última és verda. Després mira les quatre línies horitzontals: són els nivells del pla. No hi ha dibuixat cap moviment futur.</p>
+<table><tr><th>Camp</th><th>Valor de l’exemple</th></tr><tr><td>Suport triat</td><td>95 €</td></tr><tr><td>Màxim de la vela de rebot</td><td>98 €</td></tr><tr><td>Marge sobre el màxim</td><td>0,1%</td></tr><tr><td>Marge sota el suport</td><td>1%</td></tr><tr><td>Ràtio B/R mínima</td><td>2</td></tr></table>
+<p>Els marges són paràmetres de l’exemple i de la calculadora, no valors adequats per a tots els actius. Un stop molt proper pot saltar amb una oscil·lació habitual.</p>
+<ol><li><b>Entrada: 98,10 €.</b> 98 × 1,001 = 98,098 €, arrodonit a cèntims. Preparem una possible compra si el preu supera el màxim de la vela. Ara cotitza a 97,50 €: encara no ha arribat al nivell.</li><li><b>Stop: 94,05 €.</b> 95 × 0,99 = 94,05 €. És el nivell previst per sortir si el preu baixa i el pla falla. Una ordre stop no garanteix executar la venda exactament a aquest preu.</li><li><b>Objectiu: 110 €.</b> És una sortida de benefici hipotètica que fixem per fer l’exemple. En una operació real caldria justificar-la amb el gràfic i les possibles resistències; no sabem si s’assolirà.</li></ol>
+<p>Si la calculadora suggereix el cim anterior (120 €), pren-lo com a referència a revisar. En aquesta guia triem deliberadament 110 € per il·lustrar un objectiu diferent del cim. Posar l’objectiu més amunt augmenta el benefici calculat, però no demostra que sigui assolible.</p>
+<h3>Quant arrisques i quant podries guanyar?</h3>
+<table><tr><th>Per cada acció</th><th>Càlcul</th><th>Resultat</th></tr><tr><td>Risc calculat</td><td>98,10 − 94,05</td><td>4,05 €</td></tr><tr><td>Benefici potencial</td><td>110 − 98,10</td><td>11,90 €</td></tr><tr><td>Ràtio benefici/risc</td><td>11,90 ÷ 4,05</td><td>2,94 : 1</td></tr></table>
+<div class="exemple">Si compres a 98,10 € i vens a 110 €, el benefici és d’11,90 € per acció. Si vens a 94,05 €, la pèrdua és de 4,05 €. <b>La ràtio 2,94:1 compara aquests dos imports; no indica la probabilitat de guanyar.</b> Són càlculs abans de comissions, impostos i diferències d’execució.</div>
+<h3>I si el preu ja ha passat l’entrada?</h3>
+<p>Aquest pla correspon al moment en què el preu és 97,50 €. Si quan el consultes ja cotitza, per exemple, a 105 €, l’entrada de 98,10 € ha quedat enrere. No pots donar per fet que compraràs a aquell preu: revisa la situació i recalcula el risc amb una entrada possible, o espera una altra oportunitat.</p>
+<h2>Abans de donar el pla per preparat</h2>
+<ul><li>Les dades corresponen al mateix actiu i moment?</li><li>Has distingit el mínim observat d’un suport que podria fallar?</li><li>La vela de rebot ja ha acabat i has agafat el seu màxim?</li><li>El preu encara permet plantejar l’entrada?</li><li>L’objectiu té una justificació més enllà de fer créixer la ràtio?</li><li>Entens que la pèrdua real pot superar el risc calculat?</li></ul>
+<p>No entrar també és una decisió possible. La calculadora ajuda a ordenar els números; no decideix per tu si l’operació és adequada.</p>
+<h2>Glossari ràpid</h2>
+<table><tr><th>Terme</th><th>Significat</th></tr><tr><td>Tendència</td><td>Direcció predominant del preu durant un període.</td></tr><tr><td>Suport</td><td>Zona on la caiguda podria frenar.</td></tr><tr><td>Resistència</td><td>Zona on la pujada podria frenar.</td></tr><tr><td>Correcció</td><td>Baixada després d’una pujada; no assegura que la pujada es reprendrà.</td></tr><tr><td>Entrada</td><td>Preu al qual planteges comprar.</td></tr><tr><td>Stop Loss</td><td>Nivell que activa la sortida prevista per limitar la pèrdua.</td></tr><tr><td>Objectiu</td><td>Nivell previst per tancar amb benefici.</td></tr><tr><td>Ràtio B/R</td><td>Benefici potencial dividit pel risc calculat.</td></tr></table>
+<p class="fonts">Per ampliar: <a href="https://www.fidelity.com/learning-center/trading-investing/technical-analysis/support-and-resistance?ccsourcecode=reddit_tuesday">suport i resistència</a>, <a href="https://www.fidelity.com/learning-center/trading-investing/technical-analysis/technical-indicator-guide/fibonacci-retracement">nivells de Fibonacci</a> i <a href="https://www.investor.gov/introduction-investing/investing-basics/how-stock-markets-work/types-orders">tipus d’ordres i execució</a>.</p>
+<div class="avis">Material formatiu general, no assessorament financer. Els exemples són ficticis i cap estratègia garanteix guanys.</div>
+<footer><a href="calculadora.html">← Torna a la calculadora</a></footer>
+</main></body></html>

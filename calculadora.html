@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ca">
+<!--
+    Calculadora original (v4.0): Mauricio Ledesma i Samuel Ledesma (CC BY 4.0)
+    Versió 5.0: obra derivada. Reorganitzada per passos, en català, amb mitjanes mòbils,
+    suports, Fibonacci, preu d'entrada/sortida suggerits i càrrega de dades de Yahoo Finance.
+-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora Swing Trading</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#fbf9f4;--card:#ffffff;--txt:#1b1c19;--txt2:#49454e;
+  --pri:#62557e;--pri-container:#eaddff;--ok:#2f7a4d;--bad:#9e3d15;--warn:#a3660c;--line:#e4e2dd;
+  --font-mono:'JetBrains Mono',monospace;--font-serif:'Newsreader',serif;
+  --shadow-md:0 10px 20px rgba(98,85,126,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-mono)}
+body{
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3cturbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3e%3c/svg%3e");
+  color:var(--txt);padding:2rem 1rem;display:flex;justify-content:center;-webkit-font-smoothing:antialiased;line-height:1.6
+}
+.wrap{width:100%;max-width:950px;background:var(--card);border-radius:1.25rem;padding:2rem;border:1px solid var(--line);box-shadow:var(--shadow-md)}
+h1{font-size:1.5rem;text-align:center;border-bottom:2px solid var(--line);padding-bottom:1rem;margin-bottom:1.2rem;font-weight:700;color:var(--txt);letter-spacing:-.01em}
+h2{font-size:1.05rem;color:var(--pri);margin:2rem 0 .3rem;display:flex;align-items:center;gap:.5rem;font-weight:700}
+h2::after{content:'';flex:1;height:1px;background:var(--line)}
+.ajuda{font-size:.85rem;color:var(--txt2);margin-bottom:1rem;line-height:1.5}
+.fila{display:flex;justify-content:center;align-items:center;gap:.8rem;flex-wrap:wrap;margin-bottom:.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1.2rem;margin-bottom:1rem}
+.g{display:flex;flex-direction:column;gap:.4rem}
+label{font-size:.8rem;color:var(--txt2);font-weight:500;min-height:2.3em;line-height:1.25;display:flex;align-items:flex-end}
+.iw{position:relative;display:flex;align-items:center}
+.iw>span{position:absolute;left:10px;color:var(--txt2);font-weight:bold}
+.iw.pct>span{left:auto;right:10px}
+input{width:100%;background:var(--bg);border:1px solid var(--line);color:var(--txt);padding:.6rem .6rem .6rem 1.8rem;border-radius:.5rem;font-size:1rem;font-family:var(--font-mono)}
+.iw.pct input,input.pl{padding-left:.6rem}
+.iw.pct input{padding-right:1.8rem}
+input:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-container)}
+input[readonly]{background:var(--line);color:var(--txt2);cursor:not-allowed}
+.esp{font-size:.78rem;color:var(--ok);padding-left:.25rem;min-height:1em}
+.btn{background:var(--card);border:1px solid var(--line);color:var(--txt2);padding:.5rem 1.2rem;border-radius:.5rem;cursor:pointer;font-weight:bold;font-family:var(--font-mono);transition:all .3s ease}
+.btn:hover{border-color:var(--pri);color:var(--pri)}
+.btn.on,.btn.pri{background:var(--pri);color:#fff;border-color:var(--pri)}
+.btn.on:hover,.btn.pri:hover{opacity:.9;color:#fff}
+.chip{background:var(--pri-container);border:1px solid var(--pri);color:var(--pri);font-size:.75rem;padding:.2rem .5rem;border-radius:999px;cursor:pointer;margin:.1rem .2rem 0 0;font-family:var(--font-mono)}
+.chip:hover{background:var(--pri);color:#fff}
+.chip-hint{display:inline-block;font-size:.72rem;color:var(--txt2);font-style:italic}
+.fx{display:flex;align-items:center;gap:.3rem;background:var(--bg);padding:.4rem .8rem;border-radius:.5rem;border:1px solid var(--line);font-size:.8rem;color:var(--txt2)}
+.fx input{width:80px;padding:.2rem;text-align:center}
+.fx button{border:none;color:#fff;font-size:.7rem;padding:2px 6px;border-radius:4px;cursor:pointer;font-weight:bold;font-family:var(--font-mono)}
+.diag{display:grid;gap:.3rem;margin:.5rem 0 1rem;font-size:.9rem}
+.diag div{padding:.4rem .7rem;border-radius:.5rem;background:var(--bg);border-left:4px solid var(--line)}
+.diag .s{border-color:var(--ok)}.diag .n{border-color:var(--bad)}.diag .i{border-color:var(--warn)}
+.table-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:.5rem 0 1rem}
+table{width:100%;border-collapse:collapse;font-size:.85rem;min-width:480px}
+th,td{padding:.45rem .5rem;text-align:left;border-bottom:1px solid var(--line)}
+th{color:var(--txt2);font-weight:500;font-size:.78rem}
+.res{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;margin-top:1rem}
+.t{background:var(--bg);padding:1rem;border-radius:.75rem;border:1px solid var(--line);text-align:center}
+.t label{display:block;margin-bottom:.4rem}
+.t .valor{font-size:1.2rem;font-weight:bold}
+.t .sub{font-size:.8rem;color:var(--txt2);margin-top:.25rem}
+.ok{color:var(--ok)}.bad{color:var(--bad)}.warn{color:var(--warn)}
+.alerta{background:#fdf1ec;border:1px solid var(--bad);color:var(--bad);padding:.75rem;border-radius:.5rem;margin-top:1rem;display:none;text-align:center;font-size:.9rem}
+footer{margin-top:2.5rem;padding-top:1.2rem;border-top:1px solid var(--line);text-align:center;font-size:.75rem;color:var(--txt2);line-height:1.6;text-transform:uppercase;letter-spacing:.05em}
+footer p{text-transform:none;letter-spacing:normal}
+footer a{color:var(--bad)}
+
+.tabs{display:flex;justify-content:center;gap:.6rem;margin-bottom:1.5rem;flex-wrap:wrap}
+.tab-btn{background:var(--card);border:1px solid var(--line);color:var(--txt2);padding:.6rem 1.3rem;border-radius:999px;cursor:pointer;font-weight:bold;font-family:var(--font-mono);font-size:.85rem;transition:all .3s ease}
+.tab-btn:hover{border-color:var(--pri);color:var(--pri)}
+.tab-btn.on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.tab-panel{display:none}
+.tab-panel.active{display:block;animation:fadeIn .3s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+
+.quick-summary{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--card);border-top:1px solid var(--line);box-shadow:0 -6px 16px rgba(27,28,25,.08);display:flex;justify-content:space-around;align-items:center;padding:.6rem .5rem;font-size:.78rem}
+.quick-summary .qs-item{display:flex;flex-direction:column;align-items:center;gap:.15rem}
+.quick-summary .qs-label{color:var(--txt2);font-size:.68rem;text-transform:uppercase;letter-spacing:.04em}
+.quick-summary .qs-value{font-weight:700;color:var(--txt)}
+
+@media (min-width:1300px){
+  .quick-summary{left:auto;right:1.5rem;bottom:auto;top:7rem;width:190px;flex-direction:column;align-items:stretch;gap:.7rem;border-radius:.9rem;border:1px solid var(--line);border-top:1px solid var(--line);box-shadow:var(--shadow-md);padding:1rem}
+  .quick-summary .qs-item{align-items:flex-start}
+}
+@media (max-width:1299px){ body{padding-bottom:4.5rem} }
+
+@media (max-width:640px){
+  body{padding:1rem .5rem}
+  .wrap{padding:1.25rem 1rem;border-radius:.9rem}
+  h1{font-size:1.2rem}
+  h2{font-size:.95rem}
+  .grid,.res{grid-template-columns:1fr}
+  .fila{gap:.5rem}
+  .fx{width:100%;justify-content:center}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>Calculadora de Swing Trading</h1>
+<p style="text-align:center;margin-top:-.8rem;margin-bottom:1.2rem"><a href="instruccions.html" style="font-size:.8rem;color:var(--pri);text-decoration:none">📖 Instruccions i glossari</a> · <a href="tutorial-quan-entrar.html" style="font-size:.8rem;color:var(--pri);text-decoration:none">🎓 Tutorial: quan entrar</a></p>
+
+<div class="tabs">
+  <button type="button" class="tab-btn on" id="t-a" onclick="switchTab('a')">1 · Quan entrar</button>
+  <button type="button" class="tab-btn" id="t-b" onclick="switchTab('b')">2 · Quant comprar</button>
+</div>
+
+<div class="fila">
+  <button type="button" class="btn on" id="b-eur" onclick="moneda('EUR','€')">Operar en EUR (€)</button>
+  <button type="button" class="btn" id="b-usd" onclick="moneda('USD','$')">Operar en USD ($)</button>
+  <div class="fx"><span>1 EUR =</span><input type="number" id="fx" value="1.0800" step="0.0001" min="0.001"><span>USD</span>
+    <button type="button" id="b-fx" onclick="toggleFx()">AUTO</button></div>
+</div>
+
+<div class="tab-panel active" id="tab-a">
+<p id="step-indicator" style="text-align:center;font-size:.78rem;color:var(--txt2);margin:0 0 1rem">Pas 1 de 3 · Analitza la tendència</p>
+
+<!-- PAS 1 -->
+<h2>1 · Actiu i tendència</h2>
+<p class="ajuda">Introdueix el preu actual i les mitjanes mòbils a mà (les pots consultar a qualsevol gràfic, per exemple a Yahoo Finance o al teu bròker).</p>
+<div class="grid">
+  <div class="g"><label for="preu">Preu actual</label><div class="iw"><span class="sm">€</span><input type="number" id="preu" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+  <div class="g"><label for="m20">M20 (curt termini)</label><div class="iw"><span class="sm">€</span><input type="number" id="m20" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+  <div class="g"><label for="m50">M50 (mitjà termini)</label><div class="iw"><span class="sm">€</span><input type="number" id="m50" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+  <div class="g"><label for="m200">M200 (tendència de fons)</label><div class="iw"><span class="sm">€</span><input type="number" id="m200" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+</div>
+<div class="diag" id="diag"></div>
+
+<!-- PAS 2 -->
+<section class="step" id="step-2">
+<h2>2 · Cim, vall i suports</h2>
+<p class="ajuda">Mira el gràfic i introdueix el cim de la pujada (~últims 90 dies) i la vall anterior a la pujada. La taula et mostrarà on és probable que la correcció s'aturi.</p>
+<div class="grid">
+  <div class="g"><label for="inici">Inici de la pujada (vall anterior)</label><div class="iw"><span class="sm">€</span><input type="number" id="inici" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+  <div class="g"><label for="cim">Cim de la pujada</label><div class="iw"><span class="sm">€</span><input type="number" id="cim" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+  <div class="g"><label for="vall">Vall actual (mínim de la correcció)</label><div class="iw"><span class="sm">€</span><input type="number" id="vall" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+  <div class="g"><label>Correcció</label><div class="valor" id="corr" style="padding:.6rem 0;font-weight:bold">–</div></div>
+</div>
+<div class="table-scroll"><table><thead><tr><th>Suport possible</th><th>Preu</th><th>Distància al preu actual</th><th></th></tr></thead><tbody id="taula"></tbody></table></div>
+<div class="grid">
+  <div class="g" style="max-width:320px"><label for="suport">Suport triat (base de l'stop)</label><div class="iw"><span class="sm">€</span><input type="number" id="suport" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div><div class="esp" data-esp="suport"></div></div>
+</div>
+</section>
+
+<!-- PAS 3 -->
+<section class="step" id="step-3">
+<h2>3 · Preus d'entrada, stop i objectiu</h2>
+<p class="ajuda">Entra només quan el preu <b>superi el màxim de la vela de rebot</b> (confirmació). Toca els suggeriments de color per omplir cada preu.</p>
+<div class="grid">
+  <div class="g"><label for="vela">Màxim de la vela de rebot</label><div class="iw"><span class="sm">€</span><input type="number" id="vela" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div></div>
+  <div class="g"><label for="m-ent">Marge sobre el màxim (%)</label><div class="iw pct"><input type="number" id="m-ent" value="0.1" step="0.1" min="0" inputmode="decimal"><span>%</span></div></div>
+  <div class="g"><label for="m-sl">Marge sota el suport (%)</label><div class="iw pct"><input type="number" id="m-sl" value="1" step="0.1" min="0" inputmode="decimal"><span>%</span></div></div>
+  <div class="g"><label for="rr-min">Ràtio B/R mínima acceptable</label><div class="iw pct"><input type="number" id="rr-min" value="2" step="0.5" min="0" inputmode="decimal"><span>:1</span></div></div>
+</div>
+<div class="grid">
+  <div class="g"><label for="entrada">Preu d'entrada</label><div class="iw"><span class="sm">€</span><input type="number" id="entrada" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div><div class="esp" data-esp="entrada"></div><div id="s-ent"></div></div>
+  <div class="g"><label for="sl">Stop Loss (sortida si va malament)</label><div class="iw"><span class="sm">€</span><input type="number" id="sl" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div><div class="esp" data-esp="sl"></div><div id="s-sl"></div></div>
+  <div class="g"><label for="tp">Objectiu / Take Profit (sortida si va bé)</label><div class="iw"><span class="sm">€</span><input type="number" id="tp" step="0.01" min="0" inputmode="decimal" placeholder="Ex: 150.25"></div><div class="esp" data-esp="tp"></div><div id="s-tp"></div></div>
+</div>
+<div class="res">
+  <div class="t"><label>Ràtio Benefici / Risc</label><div class="valor" id="r-rr">–</div></div>
+  <div class="t"><label>Preu màxim d'entrada per a la ràtio mínima</label><div class="valor" id="r-max">–</div><div class="sub" id="r-max-s"></div></div>
+</div>
+</section>
+
+<p style="text-align:center;margin-top:1.5rem"><button type="button" class="btn pri" onclick="switchTab('b')">Continua a "Quant comprar" →</button></p>
+</div><!-- /tab-a -->
+
+<div class="tab-panel" id="tab-b">
+<p id="step-indicator-b" style="text-align:center;font-size:.78rem;color:var(--txt2);margin:0 0 1rem">Quants diners hi poses, segons el risc que vulguis assumir</p>
+
+<!-- PAS 4 -->
+<section class="step" id="step-4">
+<h2>4 · Quantes accions puc comprar?</h2>
+<div class="grid">
+  <div class="g"><label for="capital">Capital total</label><div class="iw"><span class="sm">€</span><input type="number" id="capital" value="10000" step="100" min="0" inputmode="decimal"></div><div class="esp" data-esp="capital"></div></div>
+  <div class="g"><label for="risc-pct">Risc total màxim (%)</label><div class="iw pct"><input type="number" id="risc-pct" value="5" step="0.5" min="0" max="100" inputmode="decimal"><span>%</span></div><div class="esp" id="risc-esp"></div></div>
+  <div class="g"><label for="ops">Operacions simultànies</label><input type="number" id="ops" class="pl" value="4" step="1" min="1" inputmode="numeric"></div>
+  <div class="g"><label for="risc-op">Risc màx. per operació</label><div class="iw"><span class="sm">€</span><input type="number" id="risc-op" readonly></div><div class="esp" data-esp="risc-op"></div></div>
+</div>
+<div class="res">
+  <div class="t"><label>Nombre màxim d'accions</label><div class="valor" id="r-acc">–</div></div>
+  <div class="t"><label>Import de la inversió</label><div class="valor" id="r-inv">–</div><div class="sub" id="r-inv-e"></div></div>
+  <div class="t"><label>Risc per acció</label><div class="valor bad" id="r-ra">–</div><div class="sub" id="r-ra-e"></div></div>
+  <div class="t"><label>Benefici per acció</label><div class="valor ok" id="r-ba">–</div><div class="sub" id="r-ba-e"></div></div>
+  <div class="t"><label>Risc total assumit</label><div class="valor bad"><span id="r-rt">–</span> (<span id="r-rtp">–</span>)</div><div class="sub" id="r-rt-e"></div></div>
+  <div class="t"><label>Benefici total estimat</label><div class="valor ok"><span id="r-bt">–</span> (<span id="r-btp">–</span>)</div><div class="sub" id="r-bt-e"></div></div>
+</div>
+</section>
+</div><!-- /tab-b -->
+<div class="alerta" id="alerta"></div>
+
+<footer>
+  <p>Formació general, no assessorament financer. Cap estratègia garanteix guanys.</p>
+  <p><a href="instruccions.html" style="color:var(--pri)">📖 Instruccions i glossari</a> · <a href="tutorial-quan-entrar.html" style="color:var(--pri)">🎓 Tutorial: quan entrar</a></p>
+  <p>Basat en la calculadora de <strong>Mauricio Ledesma</strong> i <strong>Samuel Ledesma</strong> (&copy; 2026), llicència
+  <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="license noopener noreferrer">CC BY 4.0</a>. Aquesta versió és una obra derivada.</p>
+</footer>
+</div>
+
+<div class="quick-summary" id="quick-summary" aria-label="Resum ràpid">
+  <div class="qs-item"><span class="qs-label">Accions</span><span class="qs-value" id="qs-acc">–</span></div>
+  <div class="qs-item"><span class="qs-label">Ràtio B/R</span><span class="qs-value" id="qs-rr">–</span></div>
+  <div class="qs-item"><span class="qs-label">Risc total</span><span class="qs-value" id="qs-rt">–</span></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id), v=id=>parseFloat($(id).value)||0;
+const f=n=>n.toLocaleString('ca-ES',{minimumFractionDigits:2,maximumFractionDigits:2});
+let base='EUR', sym='€', fxAuto=true;
+
+['fx','preu','m20','m50','m200','inici','cim','vall','suport','vela','m-ent','m-sl','rr-min','entrada','sl','tp','capital','risc-pct','ops']
+ .forEach(id=>$(id).addEventListener('input',e=>{if(id==='fx')fxManual();calcular();}));
+
+/* ---------- Tipus de canvi ---------- */
+async function fxRealtime(){
+  if(!fxAuto)return;
+  try{
+    const c=new AbortController(), t=setTimeout(()=>c.abort(),2500);
+    const r=await fetch('https://open.er-api.com/v6/latest/EUR',{signal:c.signal}); clearTimeout(t);
+    const d=await r.json();
+    if(d&&d.rates&&d.rates.USD){$('fx').value=d.rates.USD.toFixed(4);$('b-fx').style.background='#10b981';$('b-fx').textContent='AUTO';$('fx').readOnly=true;}
+  }catch(e){fxManual();}
+}
+function fxManual(){fxAuto=false;$('b-fx').style.background='#ef4444';$('b-fx').textContent='MAN';$('fx').readOnly=false;}
+function toggleFx(){if(fxAuto)fxManual();else{fxAuto=true;fxRealtime().then(calcular);}}
+function moneda(m,s){
+  base=m;sym=s;
+  $('b-eur').classList.toggle('on',m==='EUR');$('b-usd').classList.toggle('on',m==='USD');
+  document.querySelectorAll('.sm').forEach(e=>e.textContent=s);
+  calcular();
+}
+const esp=x=>base==='EUR'?x*(v('fx')||1.08):x/(v('fx')||1.08);
+
+/* ---------- Càlculs ---------- */
+function usar(id,val){$(id).value=val.toFixed(2);calcular();}
+function chips(id,llista,hint){
+  const vals=llista.filter(x=>x[1]>0);
+  $(id).innerHTML=vals.length
+    ? vals.map(x=>`<button type="button" class="chip" onclick="usar('${x[2]}',${x[1]})">${x[0]}: ${f(x[1])} ${sym}</button>`).join('')
+    : `<span class="chip-hint">${hint}</span>`;
+}
+
+function calcular(){
+  const S=sym, E=base==='EUR'?'$':'€';
+  const preu=v('preu'),m20=v('m20'),m50=v('m50'),m200=v('m200'),inici=v('inici'),cim=v('cim'),vall=v('vall');
+  const rang=cim-inici, rrMin=v('rr-min');
+
+  // Diagnòstic de tendència
+  const dg=[];
+  if(preu&&m200){dg.push(preu>m200?['s','Preu per sobre de la M200: tendència de fons alcista ✔']:['n','Preu per sota de la M200: evita comprar (tendència no alcista) ✖']);}
+  if(m50&&m200){dg.push(m50>m200?['s','M50 per sobre de la M200: tendència sana ✔']:['i','M50 per sota de la M200: tendència dèbil ⚠️']);}
+  if(preu&&m20&&m50){
+    if(preu>m20)dg.push(['i','Preu per sobre de la M20: encara no ha corregit fins a un suport curt']);
+    else if(preu>m50)dg.push(['s','Preu entre M50 i M20: correcció en marxa, zona a vigilar ✔']);
+    else dg.push(['i','Preu per sota de la M50: correcció profunda, vigila que no es trenqui la vall anterior']);
+  }
+  $('diag').innerHTML=dg.map(d=>`<div class="${d[0]}">${d[1]}</div>`).join('');
+
+  // Correcció
+  $('corr').textContent=cim>0&&vall>0?`${f((cim-vall)/cim*100)}% (des del cim fins a la vall)`:'–';
+
+  // Taula de suports
+  const rows=[['M20',m20],['M50',m50],['M200',m200]];
+  if(rang>0)rows.push(['Fibonacci 38,2%',cim-.382*rang],['Fibonacci 50%',cim-.5*rang],['Fibonacci 61,8%',cim-.618*rang]);
+  rows.push(['Vall actual',vall]);
+  $('taula').innerHTML=rows.filter(r=>r[1]>0&&preu>0).sort((a,b)=>b[1]-a[1]).map(r=>{
+    const d=(r[1]/preu-1)*100;
+    return `<tr><td>${r[0]}</td><td>${f(r[1])} ${S}</td><td class="${d<=0?'':'warn'}">${d>0?'+':''}${f(d)}% ${d>0?'(preu per sota)':''}</td><td><button type="button" class="chip" onclick="usar('suport',${r[1]})">Usar com a suport</button></td></tr>`;
+  }).join('');
+
+  // Suggeriments d'entrada / stop / objectiu
+  const suport=v('suport');
+  chips('s-ent',[['Trencament de la vela',v('vela')*(1+v('m-ent')/100),'entrada']],'Omple el "Màxim de la vela de rebot" per veure un suggeriment');
+  chips('s-sl',[['Sota el suport',suport*(1-v('m-sl')/100),'sl']],'Tria un suport al Pas 2 per veure un suggeriment');
+  chips('s-tp',[['Cim anterior',cim,'tp'],['Extensió 1,272',rang>0?cim+.272*rang:0,'tp']],'Omple el "Cim de la pujada" al Pas 2 per veure suggeriments');
+
+  const entrada=v('entrada'),sl=v('sl'),tp=v('tp');
+  const rpa=Math.abs(entrada-sl), bpa=Math.max(0,tp-entrada), rr=rpa>0?bpa/rpa:0;
+  const elRR=$('r-rr');
+  if(entrada>0&&sl>0){elRR.textContent=`${rr.toFixed(2)} : 1`; elRR.className='valor '+(rr>=rrMin?'ok':'bad');}
+  else{elRR.textContent='–'; elRR.className='valor';}
+  if(sl>0&&tp>sl){
+    const emax=(tp+rrMin*sl)/(1+rrMin);
+    $('r-max').textContent=`${f(emax)} ${S}`;
+    $('r-max').className='valor '+(entrada>0&&entrada<=emax?'ok':'warn');
+    $('r-max-s').textContent=entrada>emax?'L\'entrada actual és massa cara per a aquesta ràtio':'Per sota d\'aquest preu la ràtio és acceptable';
+  }else{$('r-max').textContent='–';$('r-max-s').textContent='';}
+
+  // Compte i dimensionament
+  const cap=v('capital'), ops=Math.max(1,parseInt($('ops').value)||1);
+  const riscTotal=cap*v('risc-pct')/100, riscOp=riscTotal/ops;
+  $('risc-op').value=riscOp.toFixed(2);
+  $('risc-esp').textContent=`${f(riscTotal)} ${S} / ${f(esp(riscTotal))} ${E}`;
+  document.querySelectorAll('[data-esp]').forEach(el=>el.textContent=`${f(esp(v(el.dataset.esp)))} ${E}`);
+
+  let acc=0;
+  if(rpa>0&&entrada>0){
+    acc=Math.floor(riscOp/rpa);
+    if(acc*entrada>cap/ops)acc=Math.floor(cap/ops/entrada);
+  }
+  const inv=acc*entrada, rt=acc*rpa, bt=acc*bpa, m=x=>`${f(x)} ${S}`, me=x=>`${f(esp(x))} ${E}`;
+  const hiHaDades=entrada>0&&rpa>0;
+  if(hiHaDades){
+    $('r-acc').textContent=acc.toLocaleString('ca-ES');
+    $('r-inv').textContent=m(inv);$('r-inv-e').textContent=me(inv);
+    $('r-ra').textContent=m(rpa);$('r-ra-e').textContent=me(rpa);
+    $('r-ba').textContent=m(bpa);$('r-ba-e').textContent=me(bpa);
+    $('r-rt').textContent=m(rt);$('r-rtp').textContent=`${cap>0?f(rt/cap*100):'0,00'}%`;$('r-rt-e').textContent=me(rt);
+    $('r-bt').textContent=m(bt);$('r-btp').textContent=`${cap>0?f(bt/cap*100):'0,00'}%`;$('r-bt-e').textContent=me(bt);
+  }else{
+    $('r-acc').textContent='–';
+    $('r-inv').textContent='–';$('r-inv-e').textContent='';
+    $('r-ra').textContent='–';$('r-ra-e').textContent='';
+    $('r-ba').textContent='–';$('r-ba-e').textContent='';
+    $('r-rt').textContent='–';$('r-rtp').textContent='–';$('r-rt-e').textContent='';
+    $('r-bt').textContent='–';$('r-btp').textContent='–';$('r-bt-e').textContent='';
+  }
+
+  // Avisos
+  const a=$('alerta'); let msg='';
+  if(entrada>0&&sl>=entrada)msg='⚠️ <b>Error:</b> l\'stop loss ha de ser inferior al preu d\'entrada (posició llarga).';
+  else if(entrada>0&&tp>0&&tp<=entrada)msg='⚠️ <b>Error:</b> l\'objectiu ha de ser superior al preu d\'entrada.';
+  else if(rr>0&&rr<rrMin)msg=`⚠️ La ràtio és inferior a ${rrMin}:1: l'operació no compensa el risc.`;
+  else if(inv>0&&acc*entrada>=cap/ops-entrada)msg='⚠️ Inversió limitada per la política de diversificació del compte.';
+  a.style.display=msg?'block':'none';a.innerHTML=msg;
+
+  // Guia progressiva
+  const d1=preu>0, d2=d1&&suport>0, d3=entrada>0&&sl>0&&tp>0, d4=hiHaDades&&acc>0;
+  $('step-indicator').textContent=!d1?'Pas 1 de 3 · Analitza la tendència':!d2?'Pas 2 de 3 · Tria un suport':!d3?'Pas 3 de 3 · Defineix entrada, stop i objectiu':'Preparat per decidir quant comprar ✓';
+  $('step-indicator-b').textContent=d4?'Mida de posició calculada ✓':'Quants diners hi poses, segons el risc que vulguis assumir';
+
+  // Resum fix sempre visible
+  $('qs-acc').textContent=$('r-acc').textContent;
+  $('qs-rr').textContent=$('r-rr').textContent;
+  $('qs-rt').textContent=$('r-rt').textContent;
+}
+function switchTab(t){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  $('tab-'+t).classList.add('active');
+  $('t-a').classList.toggle('on',t==='a');
+  $('t-b').classList.toggle('on',t==='b');
+  document.querySelector('.wrap').scrollIntoView({behavior:'smooth',block:'start'});
+}
+fxRealtime().then(calcular);
+</script>
+</body>
+</html>
