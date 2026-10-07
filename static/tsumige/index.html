@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="ca">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f8f9f6" />
-    <meta name="description" content="積みゲー (tsumigē) — El teu historial personal de videojocs." />
-    <title>積みゲー</title>
-    <script type="module" crossorigin src="/tsumige/assets/index-DTcLS7xD.js"></script>
-    <link rel="stylesheet" crossorigin href="/tsumige/assets/index-M7ooOFlU.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tsumigē — Nova adreça</title>
+    <script>
+      const route = location.hash.startsWith('#/') ? location.hash : '#/' + location.search;
+      location.replace('/Tsumige/' + route);
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <p>Tsumigē té una nova adreça. <a href="/Tsumige/">Obre l’aplicació</a>.</p>
   </body>
 </html>
