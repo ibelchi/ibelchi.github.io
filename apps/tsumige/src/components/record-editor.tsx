@@ -126,7 +126,12 @@ export function RecordEditor({ kind, record, game, catalog, onClose, onSaved, cr
   return <dialog ref={dialog} onCancel={event => { if (busy) event.preventDefault(); else onClose() }} aria-labelledby="detall-titol" className="m-auto max-h-[90dvh] w-[min(94vw,760px)] overflow-y-auto rounded-xl border bg-card p-6 text-foreground shadow-xl backdrop:bg-black/40">
     <div className="flex items-start justify-between gap-4"><div className="flex flex-wrap items-center gap-2"><h2 id="detall-titol" className="text-xl font-semibold">{creating ? (copy ? 'Afegeix un exemplar' : 'Nova experiència de joc') : game.nom}</h2>{notFound && <span className="rounded-md bg-amber-50 px-2 py-1 text-xs font-medium text-amber-800">No localitzat</span>}</div><Button type="button" variant="ghost" disabled={busy} onClick={onClose}>Tanca</Button></div>
     {retired && <p className="mt-3 text-sm">Aquest exemplar està retirat. Pots consultar-ne les dades i recuperar-lo abans d’editar-lo.</p>}
-    <form ref={formRef} onSubmit={submit} onChange={() => setDirty(true)} className="mt-6 space-y-6"><fieldset disabled={busy || retired || !canEdit} className="space-y-6">
+    <form ref={formRef} onSubmit={submit} onChange={() => setDirty(true)} className="mt-6 space-y-6">
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button type="button" variant="outline" disabled={busy} onClick={onClose}>{retired ? 'Tanca' : 'Cancel·la'}</Button>
+        {canEdit && !retired && <Button type="submit" disabled={busy}>{busy ? 'Desant…' : creating ? 'Afegeix' : 'Desa els canvis'}</Button>}
+      </div>
+      <fieldset disabled={busy || retired || !canEdit} className="space-y-6">
       <div className="flex flex-wrap gap-x-6 gap-y-2 border-b pb-4">
         <Check name="jugant" label="Hi estic jugant" checked={Boolean(experience?.jugant || history.some(e => e.jugant))} />
         <Check name="per_jugar_aviat" label="Per jugar aviat" checked={game.per_jugar_aviat} />

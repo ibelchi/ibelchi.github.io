@@ -78,7 +78,7 @@ export function CatalogPage({ history = false, retired = false }: { history?: bo
       {!history && <div role="group" aria-label="Vista de la col·lecció" className="flex gap-1"><Button size="sm" variant={view === 'list' ? 'default' : 'outline'} aria-pressed={view === 'list'} onClick={() => setView('list')}>Llista</Button><Button size="sm" variant={view === 'cards' ? 'default' : 'outline'} aria-pressed={view === 'cards'} onClick={() => setView('cards')}>Fitxes</Button></div>}
     </div>
     {gameFilter && <p className="mt-4 text-sm">Mostrant {games.get(gameFilter)?.nom ?? 'un joc'}. <Link className="underline" to={history ? '/?vista=jugats' : retired ? '/?vista=retirats' : '/?vista=colleccio'}>Mostra tots els registres</Link></p>}
-    <p role="status" className="mt-4 text-sm text-muted-foreground">{isPending ? 'Carregant…' : `${rows.length} ${history ? 'experiències' : 'exemplars'}`}</p>
+    {(!history || isPending) && <p role="status" className="mt-4 text-sm text-muted-foreground">{isPending ? 'Carregant…' : `${rows.length} exemplars`}</p>}
     {error && <p role="alert" className="mt-4 text-sm text-red-700">{error.message}</p>}
     {history && data ? <HistoryList rows={rows.filter((r): r is import('@/lib/database.types').Experiencia => 'any_jugat' in r)} games={games} experiences={data.experiencies} year={year} onOpen={setSelected} /> : <section aria-label={history ? 'Llista d’experiències' : retired ? 'Exemplars retirats' : 'Jocs de la col·lecció'} className={history ? 'mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-3' : view === 'cards' ? 'mt-5 grid gap-4 md:grid-cols-2' : 'mt-5 overflow-hidden rounded-xl border bg-card divide-y'}>
       {rows.map(r => {

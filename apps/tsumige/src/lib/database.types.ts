@@ -34,7 +34,7 @@ export type Joc = {
 export type JocInsert = Pick<Joc, 'nom' | 'plataforma' | 'format'> & Partial<Omit<Joc, 'nom' | 'plataforma' | 'format' | 'created_at' | 'updated_at'>>
 export type JocUpdate = Partial<Omit<Joc, 'id' | 'user_id' | 'created_at' | 'updated_at'>>
 
-export type JocLlista = Pick<Joc, 'id' | 'nom' | 'plataforma'>
+export type JocLlista = Pick<Joc, 'id' | 'nom' | 'plataforma'> & { portada_url?: string | null }
 
 export type ResumJocs = {
   fisics: number
