@@ -7,6 +7,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/tsumige/package-lock.json
+      - name: Build tsumigē
+        working-directory: apps/tsumige
+        env:
+          VITE_SUPABASE_URL: https://swexwdaqqdisbtvzwikv.supabase.co
+          VITE_SUPABASE_PUBLISHABLE_KEY: sb_publishable_W6slvF26oP7zAUBY86Lpsw_mV3TgSsA
+        run: |
+          npm ci
+          npm run build -- --outDir ../../static/tsumige --emptyOutDir
       - uses: shalzz/zola-deploy-action@v0.19.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
