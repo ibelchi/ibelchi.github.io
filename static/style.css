@@ -117,13 +117,17 @@ main {
     font-size: calc(var(--motto-size) * 1.2222222222);
 }
 
+.landing-motto-fitted span:last-child {
+    font-size: calc(var(--motto-size) * 1.5714285714);
+}
+
 .landing-motto-fitted span:nth-child(4) {
     font-size: var(--motto-size);
 }
 
 .landing-nav {
     display: grid;
-    width: min(100%, 21rem);
+    width: min(100%, 18rem);
     grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: center;
     justify-items: center;
