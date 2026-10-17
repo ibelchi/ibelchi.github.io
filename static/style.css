@@ -127,12 +127,17 @@ main {
 
 .landing-nav {
     display: grid;
-    width: min(100%, 18rem);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    width: min(100%, 18.5rem);
+    grid-template-columns: repeat(3, max-content);
+    justify-content: space-between;
     align-items: center;
     justify-items: center;
     gap: 1.15rem 0.75rem;
     font-size: clamp(0.8rem, 2.6vw, 1rem);
+}
+
+.landing-nav > * {
+    white-space: nowrap;
 }
 
 .landing-nav > :nth-child(3n + 1) {
