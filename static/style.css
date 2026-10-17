@@ -752,3 +752,31 @@ footer {
     align-self: flex-start;
     z-index: 10;
 }
+
+/* Blog and gallery without the portrait column. */
+.content-page main,
+.content-page footer { max-width: 860px; }
+
+.content-page .content-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    text-align: left;
+}
+
+.content-page .back-link {
+    position: static;
+    width: fit-content;
+    margin-top: 0;
+    align-self: flex-start;
+}
+
+.content-page .inner-section,
+.content-page .blog-list { padding-top: 0; }
+
+.content-page .copyright { margin-left: 0; }
+
+@media (max-width: 480px) {
+    .content-page main { padding: 2rem 1.25rem; }
+    .content-page .blog-entry { flex-direction: column; gap: 0.25rem; }
+}

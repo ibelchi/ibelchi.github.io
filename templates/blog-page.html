@@ -3,12 +3,7 @@
 {% block content %}
 <main>
     <div class="content-wrapper">
-        <section class="profile-section">
-            <div class="profile-img-container">
-                <img src="/assets/portrait.png" alt="Fotografia de perfil d'Israel Belchi">
-            </div>
-            <a href="/blog/" class="terminal-link back-link">[\←]</a>
-        </section>
+        <a href="/blog/" class="terminal-link back-link" aria-label="Torna al blog">[\←]</a>
         <section class="bubble-section inner-section blog-post">
             <h1 class="post-title">{{ page.title }}</h1>
             <time class="entry-date">{{ page.date | date(format="%Y·%m·%d") }}</time>

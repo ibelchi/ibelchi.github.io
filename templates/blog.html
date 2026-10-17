@@ -3,15 +3,9 @@
 {% block content %}
 <main>
     <div class="content-wrapper">
-        <section class="profile-section">
-            <div class="profile-img-container">
-                <img src="/assets/portrait.png" alt="Fotografia de perfil d'Israel Belchi">
-            </div>
-            <a href="/" class="terminal-link back-link">[\←]</a>
-        </section>
+        <a href="/" class="terminal-link back-link" aria-label="Torna a la portada">[\←]</a>
         <section class="bubble-section inner-section">
             <div class="blog-list">
-                <p><a href="/Tsumige/" class="terminal-link">[\積みゲー]</a></p>
                 {% for page in section.pages %}
                 <article class="blog-entry">
                     <time class="entry-date">{{ page.date | date(format="%Y·%m·%d") }}</time>
