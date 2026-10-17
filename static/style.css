@@ -91,30 +91,52 @@ main {
 }
 
 .landing-motto {
+    --motto-size: clamp(1.1rem, 2.5vw, 1.65rem);
+    width: 11ch;
     font-family: var(--font-mono);
-    font-size: clamp(1.1rem, 2.5vw, 1.65rem);
+    font-size: var(--motto-size);
     font-weight: 400;
-    line-height: 1.7;
-    letter-spacing: -0.035em;
+    line-height: calc(var(--motto-size) * 1.9);
+    letter-spacing: 0;
     color: var(--text-color);
 }
 
 .landing-motto span {
     display: block;
+    white-space: nowrap;
 }
 
-.landing-motto .landing-repeat {
-    margin-top: 0.65em;
-    color: var(--primary-color);
+/* Monospaced characters: every line spans the same 11-character width.
+   Absolute line-height keeps the baseline spacing equal at all font sizes. */
+.landing-motto-fitted span {
+    font-size: calc(var(--motto-size) * 1.375);
+}
+
+.landing-motto-fitted span:nth-child(2),
+.landing-motto-fitted span:nth-child(3) {
+    font-size: calc(var(--motto-size) * 1.2222222222);
+}
+
+.landing-motto-fitted span:nth-child(4) {
+    font-size: var(--motto-size);
 }
 
 .landing-nav {
     display: grid;
-    grid-template-columns: repeat(3, max-content);
+    width: min(100%, 21rem);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     align-items: center;
     justify-items: center;
-    gap: 1.15rem clamp(0.75rem, 3vw, 2rem);
+    gap: 1.15rem 0.75rem;
     font-size: clamp(0.8rem, 2.6vw, 1rem);
+}
+
+.landing-nav > :nth-child(3n + 1) {
+    justify-self: start;
+}
+
+.landing-nav > :nth-child(3n) {
+    justify-self: end;
 }
 
 .landing-nav a:focus-visible {
