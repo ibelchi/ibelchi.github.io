@@ -78,7 +78,7 @@ main {
 /* ── Simplified landing page ── */
 .landing-page main {
     align-items: center;
-    padding: clamp(1.25rem, 5vw, 4rem);
+    padding: 1.25rem;
 }
 
 .landing-content {
@@ -86,18 +86,19 @@ main {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: clamp(2.5rem, 7vh, 4rem);
+    gap: 2.25rem;
     text-align: center;
 }
 
 .landing-motto {
-    --motto-size: clamp(1.1rem, 2.5vw, 1.65rem);
-    width: 11ch;
-    font-family: var(--font-mono);
+    --motto-size: clamp(2.3rem, 13.7vw, 3.5rem);
+    width: min(100%, 18.5rem);
+    font-family: var(--font-serif);
     font-size: var(--motto-size);
     font-weight: 400;
-    line-height: calc(var(--motto-size) * 1.9);
+    line-height: 1.05;
     letter-spacing: 0;
+    font-optical-sizing: auto;
     color: var(--text-color);
 }
 
