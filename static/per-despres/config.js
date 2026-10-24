@@ -1,3 +1,7 @@
-// Només configuració pública. Mai service_role, sb_secret, contrasenyes o tokens d'usuari.
-// Cal recuperar els valors existents i el contracte de dades abans de publicar.
-window.PER_DESPRES_CONFIG = null;
+// Configuració pública per al navegador. Mai afegir claus administratives.
+window.PER_DESPRES_CONFIG = {
+  url: "https://vqgddclfnkndvakowllg.supabase.co",
+  publicKey: "sb_publishable_sP3YkCMdClyHl9q93rRjAw_4891ASwR",
+  table: null,
+  fields: null
+};
