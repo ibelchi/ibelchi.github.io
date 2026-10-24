@@ -6,4 +6,12 @@ Accés amb correu/contrasenya existent. Credencials enviades únicament a Supaba
 
 Lectura de pendents i revisades, actualització d’estat `pending`/`done` i de `completed_at`. Consulta filtrada per `owner_id`; RLS ha de continuar protegint les files al servidor. El contingut Markdown original es mostra com a text segur. Les converses només s’enllacen a https://chatgpt.com/c/.
 
-No s’ha canviat la configuració de Supabase ni utilitzat claus administratives. La comprovació real d’autenticació i de polítiques queda pendent de la sessió del propietari; l’entorn d’execució bloqueja les connexions directes a Supabase. ChatGPT encara conserva el connector de la versió anterior: no s’ha migrat la captura de continguts a aquesta taula, i cal resoldre aquest pont abans de considerar el projecte complet.
+L’usuari ha comprovat que pot iniciar sessió. No s’ha canviat la configuració de Supabase ni utilitzat claus administratives.
+
+## Captura manual des de ChatGPT
+
+Aquesta és la via activa per a la nova safata: demanar a ChatGPT un bloc JSON amb title, description, content (text complet fidel) i conversation_url opcional (només si es coneix l’URL privada real). Copiar el bloc, obrir Afegir contingut, enganxar-lo, prémer Preparar, revisar i Desar a la safata. També accepta text pla. Les dades no viatgen en URL ni queden al repositori.
+
+La inserció utilitza la sessió de l’usuari i les polítiques RLS existents. Es fixa owner_id a l’usuari autenticat i status a pending; no s’accepten aquests camps del bloc importat. idempotency_key és un SHA-256 estable de títol, contingut i conversa, per detectar reintents. La restricció única existent ha de resoldre les insercions simultànies; no s’ha alterat l’esquema. La importació real queda pendent de prova per l’usuari.
+
+El connector anterior continua separat i buit segons la consulta efectuada; no s’ha de presentar una desada amb aquell connector com si fos una desada a Supabase. La via implementada requereix copiar i enganxar i no és un enviament automàtic.
