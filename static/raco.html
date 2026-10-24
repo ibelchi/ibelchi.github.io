@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="referrer" content="same-origin">
+  <title>Racó | Israel Belchi</title>
+  <link rel="stylesheet" href="/style.css?v=content-20261017">
+  <style>
+    .raco main { max-width: 780px; padding: clamp(1.25rem, 5vw, 4rem); }
+    .raco-content { width: 100%; }
+    .raco header { margin-bottom: 3rem; }
+    .raco h1 { font-family: var(--font-serif); font-weight: 400; font-size: clamp(3rem, 9vw, 4.5rem); line-height: 1.15; margin: 1.5rem 0 .5rem; }
+    .raco p { color: var(--text-muted); }
+    .raco h2 { font-size: .8rem; font-weight: 500; text-transform: uppercase; letter-spacing: .08em; margin: 2.5rem 0 .75rem; color: var(--primary-color); }
+    .raco ul { list-style: none; padding: 0; }
+    .raco li { padding: 1.25rem 0; border-top: 1px solid var(--border-color); }
+    .raco .project-title { font-family: var(--font-serif); font-size: 1.65rem; font-weight: 400; }
+    .raco .project-title a { color: var(--text-color); text-decoration-thickness: 1px; text-underline-offset: .25em; }
+    .raco .project-title a:hover { color: var(--accent-color); }
+    .raco a:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 5px; }
+    .raco .project-description { font-family: var(--font-sans); font-size: .9rem; margin-top: .35rem; }
+    .raco .status { display: block; font-size: .7rem; color: var(--text-muted); margin-top: .55rem; }
+    .raco .section-note { font-family: var(--font-sans); font-size: .85rem; margin-bottom: 1rem; }
+    .raco footer { width: 100%; }
+  </style>
+</head>
+<body class="content-page raco">
+  <main>
+    <div class="raco-content">
+      <header>
+        <a href="/" class="terminal-link">[inici]</a>
+        <h1>Racó</h1>
+        <p>Eines, experiments i coses per reprendre.</p>
+      </header>
+      <section aria-labelledby="private-heading">
+        <h2 id="private-heading">Amb inici de sessió · pendents</h2>
+        <p class="section-note">Els accessos s’activaran quan cada projecte tingui la protecció preparada.</p>
+        <ul>
+          <li data-project="per-despres" data-access="private">
+            <h3 class="project-title">Per després</h3>
+            <p class="project-description">La safata de lectures i converses pendents.</p>
+            <span class="status">Pendent d’integrar i protegir</span>
+          </li>
+          <li data-project="radar" data-access="private">
+            <h3 class="project-title">Radar</h3>
+            <p class="project-description">Seguiment i anàlisi per a swing trading.</p>
+            <span class="status">En desenvolupament · accés pendent</span>
+          </li>
+          <li data-project="petons" data-access="private">
+            <h3 class="project-title">El joc dels petons</h3>
+            <p class="project-description">Una petita aventura familiar.</p>
+            <span class="status">Pendent d’integrar i protegir</span>
+          </li>
+        </ul>
+      </section>
+      <section aria-labelledby="open-heading">
+        <h2 id="open-heading">Sense inici de sessió</h2>
+        <ul>
+          <li data-project="calculadora" data-access="unlisted">
+            <h3 class="project-title"><a href="/calculadora.html">Calculadora de swing trading</a></h3>
+            <p class="project-description">Càlculs de suport per preparar una operació.</p>
+            <span class="status">Accessible a qualsevol persona que en tingui l’adreça</span>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </main>
+  <footer><p class="copyright">© 2026 Israel Belchi</p></footer>
+</body>
+</html>
