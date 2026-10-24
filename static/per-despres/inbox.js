@@ -2,7 +2,7 @@
 (() => {
 const $=id=>document.getElementById(id), c=window.PER_DESPRES_CONFIG;
 let session=null, rows=[], status="pending", active=null, generation=0, refreshTimer;
-const say=text=>{$("message").textContent=text;};
+const say=text=>{$("message").textContent=text;const notice=$("reader-message");if(notice)notice.textContent=text;};
 const clear=()=>{generation++;clearTimeout(refreshTimer);session=null;rows=[];active=null;$("entries").replaceChildren();$("read-content").textContent="";$("read-title").textContent="";$("read-description").textContent="";$("conversation").removeAttribute("href");$("reader").close();$("inbox").hidden=true;$("logout").hidden=true;$("login").hidden=false;};
 if(!c||!c.url||!c.publicKey||!c.table||!c.fields){say("La safata encara no està connectada. Falta recuperar la configuració pública existent.");return;}
 const origin=new URL(c.url);
@@ -23,12 +23,12 @@ for(const row of filtered){const article=document.createElement("article");artic
 $("pending").setAttribute("aria-pressed",String(status==="pending"));$("done").setAttribute("aria-pressed",String(status==="done"));
 }
 function open(row){active=row;$("read-title").textContent=row[f.title]||"Sense títol";$("read-description").textContent=row[f.description]||"";$("read-content").textContent=row[f.content]||"";const link=$("conversation");link.hidden=true;link.removeAttribute("href");try{const u=new URL(row[f.conversation]);if(u.origin==="https://chatgpt.com"&&u.pathname.startsWith("/c/")){link.href=u.href;link.hidden=false;}}catch{}$("toggle").textContent=status==="pending"?"Fet":"Tornar a pendents";$("reader").showModal();}
-async function load(){const g=generation;const data=await api("/rest/v1/"+encodeURIComponent(c.table)+"?select=*&order="+encodeURIComponent(f.created)+".desc");if(g!==generation)return;rows=data;render();say("");}
+async function load(){say("Carregant…");const g=generation;const data=await api("/rest/v1/"+encodeURIComponent(c.table)+"?select="+encodeURIComponent([...new Set(Object.values(f))].join(","))+"&"+encodeURIComponent(f.owner)+"=eq."+encodeURIComponent(session.user.id)+"&order="+encodeURIComponent(f.created)+".desc");if(g!==generation)return;rows=data;render();say("");}
 $("login").hidden=false;
 $("login").onsubmit=async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;say("");try{generation++;setSession(await api("/auth/v1/token?grant_type=password",{method:"POST",body:JSON.stringify({email:$("email").value.trim(),password:$("password").value})},false));$("password").value="";$("login").hidden=true;$("inbox").hidden=false;$("logout").hidden=false;await load();}catch(error){say(error.message);}finally{button.disabled=false;}};
 $("logout").onclick=async()=>{const token=session?.access_token;clear();say("");if(token)fetch(origin.origin+"/auth/v1/logout",{method:"POST",headers:{apikey:c.publicKey,Authorization:"Bearer "+token}}).catch(()=>{});};
 $("pending").onclick=()=>{status="pending";render();};$("done").onclick=()=>{status="done";render();};
 $("reload").onclick=async()=>{try{await load();}catch(error){say(error.message);}};
 $("close").onclick=()=>$("reader").close();
-$("toggle").onclick=async()=>{if(!active)return;const button=$("toggle");button.disabled=true;const row=active,g=generation;try{const next=row[f.status]==="pending"?"done":"pending";const changed=await api("/rest/v1/"+encodeURIComponent(c.table)+"?"+encodeURIComponent(f.id)+"=eq."+encodeURIComponent(row[f.id]),{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify({[f.status]:next})});if(g!==generation)return;if(!Array.isArray(changed)||changed.length!==1)throw Error("No s’ha pogut confirmar el canvi.");row[f.status]=next;$("reader").close();render();say("");}catch(error){say(error.message);}finally{button.disabled=false;}};
+$("toggle").onclick=async()=>{if(!active)return;const button=$("toggle");button.disabled=true;const row=active,g=generation;try{const next=row[f.status]==="pending"?"done":"pending";const changed=await api("/rest/v1/"+encodeURIComponent(c.table)+"?"+encodeURIComponent(f.id)+"=eq."+encodeURIComponent(row[f.id]),{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify({[f.status]:next,[f.completed]:next==="done"?new Date().toISOString():null})});if(g!==generation)return;if(!Array.isArray(changed)||changed.length!==1)throw Error("No s’ha pogut confirmar el canvi.");row[f.status]=next;row[f.completed]=changed[0][f.completed];$("reader").close();render();say("");}catch(error){say(error.message);}finally{button.disabled=false;}};
 })();

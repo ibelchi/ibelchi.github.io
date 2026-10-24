@@ -1,9 +1,9 @@
 # Per després
 
-Interfície reconstruïda per a GitHub Pages. No publicada: manca recuperar el contracte públic de la configuració existent de Supabase. No s’ha modificat Supabase.
+Safata a `/per-despres/`, enllaçada des de `/raco.html`. Connexió pública a Supabase, taula `public.per_despres_entries`, segons els noms facilitats pel propietari.
 
-Accés amb correu/contrasenya, sessió només en memòria, renovació automàtica, tancament de sessió amb neteja del contingut, pendents/revisades i lectura. El contingut es presenta com a text segur conservant el Markdown original; no executa HTML. Enllaç a conversa només per a https://chatgpt.com/c/.
+Accés amb correu/contrasenya existent. Credencials enviades únicament a Supabase Auth per HTTPS. Sessió només en memòria, renovació automàtica; recarregar la pàgina requereix tornar a entrar. No es desa contingut en localStorage ni al repositori. Tancar sessió neteja la interfície i revoca la sessió remota.
 
-`config.js` ha de contenir URL pública, clau publishable/anon, nom de taula i mapatge dels camps id/title/description/content/status/created/conversation. Els noms reals i els valors d’estat s’han de contrastar amb l’esquema ja existent abans de publicar. No afegir claus administratives, contrasenyes ni dades privades al repositori.
+Lectura de pendents i revisades, actualització d’estat `pending`/`done` i de `completed_at`. Consulta filtrada per `owner_id`; RLS ha de continuar protegint les files al servidor. El contingut Markdown original es mostra com a text segur. Les converses només s’enllacen a https://chatgpt.com/c/.
 
-La privacitat de les dades depèn de les polítiques RLS existents. Aquesta web no crea usuaris, taules ni polítiques i no incorpora permisos administratius. No s’ha provat encara amb sessió real.
+No s’ha canviat la configuració de Supabase ni utilitzat claus administratives. La comprovació real d’autenticació i de polítiques queda pendent de la sessió del propietari; l’entorn d’execució bloqueja les connexions directes a Supabase. ChatGPT encara conserva el connector de la versió anterior: no s’ha migrat la captura de continguts a aquesta taula, i cal resoldre aquest pont abans de considerar el projecte complet.
