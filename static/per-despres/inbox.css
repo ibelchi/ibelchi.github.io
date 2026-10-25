@@ -4,3 +4,9 @@ main.inbox{display:block}.inbox dialog h2{font-family:var(--font-serif);font-siz
 #capture form{max-width:none;border:0;padding:0}#capture textarea{width:100%;padding:12px;background:#fffdf8;color:#302d36;font:inherit;border:1px solid #b7a6c9;border-radius:4px;resize:vertical}#capture-content{white-space:pre-wrap;overflow-wrap:anywhere;max-height:35vh;overflow:auto;font:inherit;line-height:1.6;padding:16px;border:1px solid #cfc3d7;margin-top:12px}#capture h3{margin-top:24px}#capture-message{margin-top:20px}
 
 .inbox>nav,.inbox #inbox>nav{margin-top:0}#reader-message:not(:empty){padding:12px;border-left:3px solid #9576b7}#reader #toggle{margin-top:16px}
+
+/* Keep the tray and dialogs centred despite the shared global reset. */
+main.inbox{width:100%;margin:0 auto}
+.inbox #login{margin-inline:auto}
+.inbox #inbox>nav{justify-content:center}
+.inbox dialog{margin:auto}
