@@ -57,7 +57,7 @@ if(!Array.isArray(changed)||changed.length!==1||changed[0][f.id]!==row[f.id]||ch
 throw Error("El servidor no ha confirmat el canvi d’estat. Actualitza la safata i torna-ho a provar.");
 }
 rows=rows.map(item=>item[f.id]===row[f.id]?changed[0]:item);
-$("reader").close();render();say(next==="done"?"Entrada marcada com a revisada.":"Entrada tornada a pendents.");
+$("reader").close();render();say("");
 }catch(error){if(g===generation)$("reader-message").textContent=error.message;}
 finally{if(g===generation){updating=false;button.disabled=false;$("close").disabled=false;}}
 };
