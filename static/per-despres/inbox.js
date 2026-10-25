@@ -30,7 +30,6 @@ function setSession(value){session=value;clearTimeout(refreshTimer);const g=gene
 function render(){
 $("entries").replaceChildren();
 const filtered=rows.filter(row=>row[f.status]===status);
-if(!filtered.length){const p=document.createElement("p");p.textContent=status==="pending"?"Tot al dia. No tens lectures pendents.":"Encara no hi ha lectures revisades.";$("entries").append(p);}
 for(const row of filtered){const article=document.createElement("article");article.className="entry";const title=document.createElement("h2");title.textContent=row[f.title]||"Sense títol";const p=document.createElement("p");p.textContent=row[f.description]||"";const button=document.createElement("button");button.textContent="Llegir ↗";button.type="button";button.onclick=()=>open(row);article.append(title,p,button);$("entries").append(article);}
 $("pending").setAttribute("aria-pressed",String(status==="pending"));$("done").setAttribute("aria-pressed",String(status==="done"));
 }
