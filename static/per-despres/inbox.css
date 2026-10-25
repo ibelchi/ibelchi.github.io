@@ -10,3 +10,11 @@ main.inbox{width:100%;margin:0 auto}
 .inbox #login{margin-inline:auto}
 .inbox #inbox>nav{justify-content:center}
 .inbox dialog{margin:auto}
+
+.entry-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:12px}
+.entry-actions button{margin-top:0}
+.entry-conversation{font-family:var(--font-mono,monospace);font-size:.75rem}
+a.entry-conversation{color:var(--primary-color,#62557e);text-decoration:underline;text-underline-offset:3px}
+span.entry-conversation{color:var(--text-muted,#49454e)}
+.session-actions{display:flex;justify-content:flex-end;margin-bottom:16px}
+.inbox .session-actions button{font-size:.7rem;padding:6px 8px;border-color:transparent}

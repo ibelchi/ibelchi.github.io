@@ -1,17 +1,38 @@
 "use strict";
 (() => {
 const $=id=>document.getElementById(id), c=window.PER_DESPRES_CONFIG;
-let session=null, rows=[], status="pending", active=null, generation=0, refreshTimer, updating=false;
+let session=null, rows=[], status="pending", active=null, generation=0, updating=false, booting=true, signingIn=false;
 const say=text=>{$("message").textContent=text;const notice=$("reader-message");if(notice)notice.textContent=text;};
-const clear=()=>{generation++;clearTimeout(refreshTimer);session=null;rows=[];active=null;updating=false;resetCapture();$("capture").close();$("entries").replaceChildren();$("read-content").textContent="";$("read-title").textContent="";$("read-description").textContent="";$("conversation").removeAttribute("href");$("reader").close();$("inbox").hidden=true;$("login").hidden=false;};
+const clear=()=>{generation++;session=null;rows=[];active=null;updating=false;$("close").disabled=false;$("toggle").disabled=false;resetCapture();$("capture").close();$("entries").replaceChildren();$("read-content").textContent="";$("read-title").textContent="";$("read-description").textContent="";$("conversation").removeAttribute("href");$("reader").close();$("inbox").hidden=true;$("login").hidden=false;};
 if(!c||!c.url||!c.publicKey||!c.table||!c.fields){say("La safata encara no està connectada. Falta recuperar la configuració pública existent.");return;}
 const origin=new URL(c.url);
 if(origin.protocol!=="https:"||!origin.hostname.endsWith(".supabase.co")||/^sb_secret_/.test(c.publicKey)){say("Configuració pública no vàlida.");return;}
 if(c.publicKey.startsWith("eyJ")){try{const payload=JSON.parse(atob(c.publicKey.split(".")[1].replace(/-/g,"+").replace(/_/g,"/")));if(payload.role!=="anon")throw Error();}catch{say("Cal una clau pública anon o publishable.");return;}}
 const f=c.fields;
+if(!window.supabase?.createClient){say("No s’ha pogut carregar l’accés a la safata. Actualitza la pàgina.");return;}
+const authClient=window.supabase.createClient(origin.origin,c.publicKey,{
+auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:"per-despres.auth."+origin.host}
+});
+
 async function api(path,options={},auth=true){
-const response=await fetch(origin.origin+path,{...options,cache:"no-store",referrerPolicy:"no-referrer",headers:{"apikey":c.publicKey,"Content-Type":"application/json",...(auth?{"Authorization":"Bearer "+session.access_token}:{}),...options.headers}});
-if(!response.ok){if(auth&&response.status===401){clear();throw Error("La sessió ha caducat. Torna a entrar.");}if(response.status===409)throw Error("Aquest contingut ja s’ha desat. Actualitza la safata per veure’l.");if(auth){
+const g=generation;
+if(auth){
+const {data,error}=await authClient.auth.getSession();
+if(g!==generation)throw Error("La sessió ha canviat.");
+if(error)throw Error("No s’ha pogut recuperar la sessió. Torna-ho a provar.");
+if(!data.session){clear();throw Error("Torna a entrar a la safata.");}
+session=data.session;
+}
+const request=()=>fetch(origin.origin+path,{...options,cache:"no-store",referrerPolicy:"no-referrer",headers:{"apikey":c.publicKey,"Content-Type":"application/json",...(auth?{"Authorization":"Bearer "+session.access_token}:{}),...options.headers}});
+let response=await request();
+if(auth&&response.status===401){
+const {data,error}=await authClient.auth.refreshSession();
+if(g!==generation)throw Error("La sessió ha canviat.");
+if(error||!data.session)throw Error("No s’ha pogut renovar la sessió. Torna-ho a provar.");
+session=data.session;response=await request();
+}
+
+if(!response.ok){if(auth&&response.status===401)throw Error("Supabase no ha acceptat la sessió. Torna a entrar.");if(response.status===409)throw Error("Aquest contingut ja s’ha desat. Actualitza la safata per veure’l.");if(auth){
 let detail={};try{detail=await response.json();}catch{}
 const code=typeof detail.code==="string"&&/^[A-Z0-9_]{2,40}$/.test(detail.code)?detail.code:"";
 let reason="No s’ha pogut completar l’operació.";
@@ -26,17 +47,48 @@ throw Error(reason+" (HTTP "+response.status+(code?"; "+code:"")+(constraint?"; 
 throw Error("No s’ha pogut iniciar sessió. Comprova el correu i la contrasenya.");}
 return response.status===204?null:response.json();
 }
-function setSession(value){session=value;clearTimeout(refreshTimer);const g=generation;refreshTimer=setTimeout(async()=>{try{const next=await api("/auth/v1/token?grant_type=refresh_token",{method:"POST",body:JSON.stringify({refresh_token:session.refresh_token})},false);if(g===generation)setSession(next);}catch{if(g===generation){clear();say("La sessió ha caducat. Torna a entrar.");}}},Math.max(1000,(value.expires_in-60)*1000));}
+function setSession(value){session=value;}
+async function enterSession(value){
+if(!value)return;
+if(session?.user.id!==value.user.id){generation++;rows=[];$("entries").replaceChildren();}
+setSession(value);$("login").hidden=true;$("inbox").hidden=false;await load();
+}
+function conversationLink(raw){try{return privateUrl(raw);}catch{return null;}}
+function makeConversationLink(raw){
+const href=conversationLink(raw);
+const link=document.createElement(href?"a":"span");
+link.className="entry-conversation";
+link.textContent=href?"Obrir conversa ↗":"Sense enllaç de conversa";
+if(href){link.href=href;link.target="_blank";link.rel="noopener noreferrer";link.referrerPolicy="no-referrer";}
+return link;
+}
+
 function render(){
 $("entries").replaceChildren();
 const filtered=rows.filter(row=>row[f.status]===status);
-for(const row of filtered){const article=document.createElement("article");article.className="entry";const title=document.createElement("h2");title.textContent=row[f.title]||"Sense títol";const p=document.createElement("p");p.textContent=row[f.description]||"";const button=document.createElement("button");button.textContent="Llegir ↗";button.type="button";button.onclick=()=>open(row);article.append(title,p,button);$("entries").append(article);}
+for(const row of filtered){const article=document.createElement("article");article.className="entry";const title=document.createElement("h2");title.textContent=row[f.title]||"Sense títol";const p=document.createElement("p");p.textContent=row[f.description]||"";const button=document.createElement("button");button.textContent="Llegir ↗";button.type="button";button.onclick=()=>open(row);const actions=document.createElement("div");actions.className="entry-actions";actions.append(button,makeConversationLink(row[f.conversation]));article.append(title,p,actions);$("entries").append(article);}
 $("pending").setAttribute("aria-pressed",String(status==="pending"));$("done").setAttribute("aria-pressed",String(status==="done"));
 }
-function open(row){if(updating)return;active=row;$("reader-message").textContent="";$("read-title").textContent=row[f.title]||"Sense títol";$("read-description").textContent=row[f.description]||"";$("read-content").textContent=row[f.content]||"";const link=$("conversation");link.hidden=true;link.removeAttribute("href");try{const u=new URL(row[f.conversation]);if(u.origin==="https://chatgpt.com"&&u.pathname.startsWith("/c/")){link.href=u.href;link.hidden=false;}}catch{}$("toggle").textContent=row[f.status]==="pending"?"Marcar com a revisada":"Tornar a pendents";$("toggle").disabled=false;$("reader").showModal();$("close").focus();}
+function open(row){if(updating)return;active=row;$("reader-message").textContent="";$("read-title").textContent=row[f.title]||"Sense títol";$("read-description").textContent=row[f.description]||"";$("read-content").textContent=row[f.content]||"";const link=$("conversation");link.hidden=true;link.removeAttribute("href");const href=conversationLink(row[f.conversation]);if(href){link.href=href;link.hidden=false;}$("toggle").textContent=row[f.status]==="pending"?"Marcar com a revisada":"Tornar a pendents";$("toggle").disabled=false;$("reader").showModal();$("close").focus();}
 async function load(){say("Carregant…");const g=generation;const data=await api("/rest/v1/"+encodeURIComponent(c.table)+"?select="+encodeURIComponent([...new Set(Object.values(f))].join(","))+"&"+encodeURIComponent(f.owner)+"=eq."+encodeURIComponent(session.user.id)+"&order="+encodeURIComponent(f.created)+".desc");if(g!==generation)return;rows=data;render();say("");}
 $("login").hidden=false;
-$("login").onsubmit=async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;say("");try{generation++;setSession(await api("/auth/v1/token?grant_type=password",{method:"POST",body:JSON.stringify({email:$("email").value.trim(),password:$("password").value})},false));$("password").value="";$("login").hidden=true;$("inbox").hidden=false;await load();}catch(error){say(error.message);}finally{button.disabled=false;}};
+$("login").onsubmit=async event=>{
+event.preventDefault();const button=event.submitter;button.disabled=true;signingIn=true;say("");
+try{
+generation++;
+const {data,error}=await authClient.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
+$("password").value="";
+if(error||!data.session)throw Error("No s’ha pogut iniciar sessió. Comprova el correu i la contrasenya.");
+await enterSession(data.session);
+}catch(error){say(error.message);}finally{signingIn=false;button.disabled=false;}
+};
+$("logout").onclick=async()=>{
+const button=$("logout");button.disabled=true;
+try{const {error}=await authClient.auth.signOut({scope:"local"});if(error)throw error;clear();say("");}
+catch{say("No s’ha pogut tancar la sessió. Torna-ho a provar.");}
+finally{button.disabled=false;}
+};
+
 $("pending").onclick=()=>{status="pending";render();};$("done").onclick=()=>{status="done";render();};
 $("reload").onclick=async()=>{try{await load();}catch(error){say(error.message);}};
 $("close").onclick=()=>{if(!updating)$("reader").close();};
@@ -70,7 +122,7 @@ $("capture-content").textContent="";$("capture-message").textContent="";$("captu
 }
 function privateUrl(raw){
 if(!raw)return null;
-try{const u=new URL(raw);if(u.origin==="https://chatgpt.com"&&u.pathname.startsWith("/c/")&&u.pathname.length>3&&!u.username&&!u.password)return u.origin+u.pathname;}catch{}
+try{const u=new URL(raw);if(u.origin==="https://chatgpt.com"&&/^\/(?:g\/[^/]+\/)?c\/[^/]+\/?$/.test(u.pathname)&&!u.username&&!u.password)return u.origin+u.pathname;}catch{}
 throw Error("L’enllaç ha de ser una conversa privada de https://chatgpt.com/c/.");
 }
 function parseCapture(raw){
@@ -104,4 +156,23 @@ $("capture").close();resetCapture();status="pending";rows.unshift(inserted[0]);r
 }catch(error){$("capture-message").textContent=error.message;}finally{button.disabled=false;}
 };
 
+authClient.auth.onAuthStateChange((event,value)=>{
+if(event==="SIGNED_OUT"){clear();say("");return;}
+if(value){
+const previousOwner=session?.user.id;
+if(previousOwner&&previousOwner!==value.user.id)clear();
+session=value;
+if(!booting&&!signingIn&&previousOwner!==value.user.id){
+setTimeout(()=>{if(session?.user.id===value.user.id)enterSession(value).catch(error=>say(error.message));},0);
+}
+}
+});
+(async()=>{
+try{
+const {data,error}=await authClient.auth.getSession();
+if(error)throw Error("No s’ha pogut recuperar la sessió. Torna-ho a provar.");
+if(data.session)await enterSession(data.session);
+}catch(error){say(error.message);}
+finally{booting=false;}
+})();
 })();
