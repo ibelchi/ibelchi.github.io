@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Instruccions i glossari · Calculadora de Swing Trading</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Inter:wght@400;500;600&display=swap');
+
+:root{
+  --bg:#fbf9f4;--card:#ffffff;--txt:#1b1c19;--txt2:#49454e;
+  --pri:#62557e;--pri-container:#eaddff;--ok:#2f7a4d;--bad:#9e3d15;--warn:#a3660c;--line:#e4e2dd;
+  --font-mono:'JetBrains Mono',monospace;
+  --shadow-md:0 10px 20px rgba(98,85,126,.12);
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-mono)}
+body{
+  background-color:var(--bg);
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3cturbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.05'/%3e%3c/svg%3e");
+  color:var(--txt);padding:2rem 1rem;display:flex;justify-content:center;-webkit-font-smoothing:antialiased;line-height:1.7
+}
+.wrap{width:100%;max-width:800px;background:var(--card);border-radius:1.25rem;padding:2rem;border:1px solid var(--line);box-shadow:var(--shadow-md)}
+.top-link{display:inline-block;font-size:.85rem;color:var(--pri);text-decoration:none;margin-bottom:1rem}
+.top-link:hover{color:var(--bad)}
+h1{font-size:1.4rem;border-bottom:2px solid var(--line);padding-bottom:1rem;margin-bottom:1.2rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.1rem;color:var(--pri);margin:2rem 0 .6rem;font-weight:700}
+h3{font-size:.95rem;color:var(--txt);margin:1.3rem 0 .4rem;font-weight:700}
+p{font-size:.9rem;margin-bottom:.8rem}
+ol,ul{font-size:.9rem;margin:0 0 .8rem 1.3rem}
+li{margin-bottom:.4rem}
+code{background:var(--bg);border:1px solid var(--line);border-radius:.3rem;padding:.05rem .35rem;font-size:.82rem}
+.formula{background:var(--bg);border:1px solid var(--line);border-left:4px solid var(--pri);border-radius:.4rem;padding:.6rem .9rem;font-size:.82rem;margin:.5rem 0;overflow-x:auto}
+.intro{font-size:.9rem;color:var(--txt2);margin-bottom:1.5rem;padding-bottom:1.2rem;border-bottom:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin:.5rem 0 1rem}
+th,td{padding:.5rem .6rem;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--txt2);font-weight:500;font-size:.78rem}
+.avis{background:#fdf1ec;border:1px solid var(--bad);color:var(--bad);padding:.8rem 1rem;border-radius:.5rem;margin-top:2rem;font-size:.85rem}
+footer{margin-top:2rem;padding-top:1.2rem;border-top:1px solid var(--line);text-align:center;font-size:.8rem}
+footer a{color:var(--pri);text-decoration:none}
+footer a:hover{color:var(--bad)}
+
+@media (max-width:640px){
+  body{padding:1rem .5rem}
+  .wrap{padding:1.25rem 1rem;border-radius:.9rem}
+  h1{font-size:1.15rem}
+  table{display:block;overflow-x:auto;white-space:nowrap}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<a href="calculadora.html" class="top-link">← Torna a la calculadora</a>
+<h1>Instruccions i glossari</h1>
+<p class="intro">Aquesta pàgina explica com fer servir la Calculadora de Swing Trading, què significa cada terme i com es calcula cada camp. No és assessorament financer, només documentació de l'eina.</p>
+
+<h2>Com funciona, en general</h2>
+<p>L'eina et guia en 4 passos per valorar una operació de <i>swing trading</i>: primer mires la tendència de l'actiu, després identifiques on podria aturar-se una correcció, defineixes els teus preus d'entrada/sortida, i finalment calcules quantes accions pots comprar segons el risc que vols assumir. Tots els preus s'introdueixen a mà (consulta'ls en qualsevol gràfic, per exemple Yahoo Finance o el teu bròker).</p>
+
+<h2>Moneda i tipus de canvi</h2>
+<p>A dalt de tot tries si operes en <b>EUR</b> o en <b>USD</b>. Introdueix <u>tots</u> els preus en la moneda que triïs (la del mercat on cotitza el valor): entrada, stop, objectiu, capital, etc. Al costat de molts camps veuràs l'equivalència aproximada en l'altra moneda, només informativa.</p>
+<p>El camp <code>1 EUR = ... USD</code> s'actualitza automàticament (botó <b>AUTO</b>) consultant un servei extern de canvi de divisa. Si l'edites a mà, passa a mode <b>MAN</b> i ja no es tocarà sol.</p>
+<div class="formula">Equivalència = EUR→USD: preu × tipus de canvi &nbsp;·&nbsp; USD→EUR: preu ÷ tipus de canvi</div>
+<p><b>Important:</b> la calculadora no resta comissions de compra, venda ni de canvi de divisa. Si el teu bròker te les cobra, tingues-les en compte tu mateix a l'hora de valorar si la ràtio benefici/risc et compensa.</p>
+
+<h3>1 · Actiu i tendència</h3>
+<table>
+<tr><th>Camp</th><th>Què és</th></tr>
+<tr><td>Preu actual</td><td>Cotització actual del valor.</td></tr>
+<tr><td>M20 / M50 / M200</td><td>Mitjanes mòbils simples de 20, 50 i 200 sessions (curt, mitjà i llarg termini). Les pots llegir directament del gràfic.</td></tr>
+</table>
+<p>Amb aquests quatre valors, l'eina mostra un petit diagnòstic automàtic de la tendència:</p>
+<ul>
+<li>Preu per sobre de la M200 → tendència de fons alcista (favorable per comprar).</li>
+<li>M50 per sobre de la M200 → tendència sana; si no, tendència dèbil.</li>
+<li>Preu per sobre de la M20 → encara no ha corregit prou. Entre M50 i M20 → correcció en marxa, zona a vigilar. Per sota de la M50 → correcció profunda, vigila que no es trenqui la vall anterior.</li>
+</ul>
+
+<h3>2 · Cim, vall i suports</h3>
+<table>
+<tr><th>Camp</th><th>Què és</th></tr>
+<tr><td>Inici de la pujada</td><td>La vall (mínim) anterior a l'inici de la pujada que vols estudiar.</td></tr>
+<tr><td>Cim de la pujada</td><td>El màxim assolit en aquesta pujada (mira els últims ~90 dies).</td></tr>
+<tr><td>Vall actual</td><td>El mínim de la correcció que s'està produint ara.</td></tr>
+</table>
+<div class="formula">Correcció (%) = (Cim − Vall) ÷ Cim × 100</div>
+<p>La taula de <b>suports possibles</b> combina les mitjanes mòbils (M20/M50/M200), tres nivells de retrocés de <b>Fibonacci</b> (38,2% / 50% / 61,8% del tram Inici→Cim) i la vall actual, ordenats de més alt a més baix, amb la distància de cadascun respecte al preu actual:</p>
+<div class="formula">Fibonacci X% = Cim − X × (Cim − Inici)<br>Distància al preu actual (%) = (Preu del suport ÷ Preu actual − 1) × 100</div>
+<p>Clica "Usar com a suport" a la fila que et sembli més rellevant, o escriu-lo directament al camp <b>Suport triat</b>: serà la base per calcular el teu stop loss.</p>
+
+<h3>3 · Preus d'entrada, stop i objectiu</h3>
+<table>
+<tr><th>Camp</th><th>Què és</th></tr>
+<tr><td>Màxim de la vela de rebot</td><td>El màxim de la sessió on el preu comença a rebotar des del suport (senyal de confirmació).</td></tr>
+<tr><td>Marge sobre el màxim (%)</td><td>Marge de seguretat que afegeixes per confirmar el trencament abans d'entrar.</td></tr>
+<tr><td>Marge sota el suport (%)</td><td>Marge de seguretat que restes al suport per fixar l'stop, evitant sortir per una petita oscil·lació.</td></tr>
+<tr><td>Ràtio B/R mínima</td><td>La ràtio benefici/risc mínima que exigeixes per entrar en l'operació.</td></tr>
+</table>
+<p>L'eina et suggereix (botons blaus) tres preus, que pots acceptar o sobreescriure:</p>
+<div class="formula">Entrada suggerida = Vela de rebot × (1 + Marge d'entrada ÷ 100)
+Stop suggerit = Suport × (1 − Marge de stop ÷ 100)
+Objectiu suggerit = Cim de la pujada, o bé Cim + 0,272 × (Cim − Inici)  ["extensió de Fibonacci"]</div>
+<p>Amb els preus finals d'<b>Entrada</b>, <b>Stop Loss</b> i <b>Objectiu</b> es calcula:</p>
+<div class="formula">Risc per acció = |Entrada − Stop|
+Benefici per acció = màxim(0, Objectiu − Entrada)
+Ràtio Benefici/Risc = Benefici per acció ÷ Risc per acció
+Preu màxim d'entrada = (Objectiu + Ràtio mínima × Stop) ÷ (1 + Ràtio mínima)</div>
+<p>Aquest darrer valor et diu fins a quin preu pots pagar per l'entrada sense que la ràtio baixi de la mínima que has fixat.</p>
+
+<h3>4 · Quantes accions puc comprar?</h3>
+<table>
+<tr><th>Camp</th><th>Què és</th></tr>
+<tr><td>Capital total</td><td>El capital total de la teva cartera (en la moneda triada a dalt).</td></tr>
+<tr><td>Risc total màxim (%)</td><td>Quin percentatge del capital estàs disposat a arriscar en conjunt, entre totes les operacions obertes.</td></tr>
+<tr><td>Operacions simultànies</td><td>Entre quantes operacions repartiràs aquest risc total (diversificació).</td></tr>
+<tr><td>Risc màx. per operació</td><td>Es calcula sol: el risc total dividit entre el nombre d'operacions.</td></tr>
+</table>
+<div class="formula">Risc total = Capital × Risc total màxim (%) ÷ 100
+Risc per operació = Risc total ÷ Operacions simultànies
+Nombre d'accions = arrodonit cap avall de (Risc per operació ÷ Risc per acció)
+   — amb un límit: la inversió (Accions × Entrada) mai supera Capital ÷ Operacions simultànies</div>
+<p>A partir del nombre d'accions, es calculen la resta de xifres finals (import de la inversió, risc i benefici totals en diners i en % del capital).</p>
+<p>L'eina mostra un avís en vermell si: l'stop no és inferior a l'entrada, l'objectiu no és superior a l'entrada, la ràtio és inferior a la mínima exigida, o la inversió supera el límit de diversificació marcat pel nombre d'operacions simultànies.</p>
+
+<h2>Glossari</h2>
+<table>
+<tr><th>Terme</th><th>Significat</th></tr>
+<tr><td>Swing trading</td><td>Estratègia que manté una posició oberta uns dies o setmanes, aprofitant moviments de curt/mitjà termini dins d'una tendència més llarga.</td></tr>
+<tr><td>Tendència alcista / baixista</td><td>Direcció general del preu al llarg del temps (a l'alça o a la baixa).</td></tr>
+<tr><td>Mitjana mòbil (M20/M50/M200)</td><td>Mitjana del preu de tancament de les últimes N sessions; suavitza el moviment del preu per veure la tendència de fons.</td></tr>
+<tr><td>Suport</td><td>Nivell de preu on, històricament, la caiguda tendeix a aturar-se perquè hi ha prou compradors.</td></tr>
+<tr><td>Resistència</td><td>Nivell de preu on, històricament, la pujada tendeix a aturar-se perquè hi ha prou venedors.</td></tr>
+<tr><td>Correcció</td><td>Retrocés temporal del preu dins d'una tendència alcista més àmplia.</td></tr>
+<tr><td>Retrocés de Fibonacci</td><td>Nivells (38,2% / 50% / 61,8%) que sovint actuen com a suport durant una correcció, calculats sobre el tram de pujada anterior.</td></tr>
+<tr><td>Extensió de Fibonacci</td><td>Nivell (p. ex. 127,2%) més enllà del cim anterior, usat com a possible objectiu de preu.</td></tr>
+<tr><td>Vela de rebot / trencament</td><td>Sessió (dia) en què el preu confirma que torna a pujar després d'una correcció, trencant una resistència curta.</td></tr>
+<tr><td>Stop Loss (SL)</td><td>Preu al qual véns per limitar pèrdues si l'operació va malament.</td></tr>
+<tr><td>Take Profit (TP) / Objectiu</td><td>Preu al qual véns per recollir beneficis si l'operació va bé.</td></tr>
+<tr><td>Ràtio Benefici/Risc (B/R)</td><td>Quant pots guanyar per cada unitat que arrisques. Una ràtio 2:1 vol dir que el benefici potencial duplica la pèrdua màxima assumida.</td></tr>
+<tr><td>Risc per operació / total</td><td>Import màxim que estàs disposat a perdre en una operació concreta, o en el conjunt de totes les obertes.</td></tr>
+<tr><td>Diversificació</td><td>Repartir el capital i el risc entre diverses operacions en lloc de concentrar-ho tot en una.</td></tr>
+</table>
+
+<div class="avis">Aquesta pàgina i la calculadora són material formatiu general, no assessorament financer. Cap estratègia garanteix guanys; el mercat pot fer-te perdre part o tot el capital invertit.</div>
+
+<footer><a href="calculadora.html">← Torna a la calculadora</a></footer>
+</div>
+</body>
+</html>
