@@ -1,9 +1,9 @@
 "use strict";
 (() => {
 const $=id=>document.getElementById(id), c=window.PER_DESPRES_CONFIG;
-let session=null, rows=[], status="pending", active=null, generation=0, refreshTimer;
+let session=null, rows=[], status="pending", active=null, generation=0, refreshTimer, updating=false;
 const say=text=>{$("message").textContent=text;const notice=$("reader-message");if(notice)notice.textContent=text;};
-const clear=()=>{generation++;clearTimeout(refreshTimer);session=null;rows=[];active=null;resetCapture();$("capture").close();$("entries").replaceChildren();$("read-content").textContent="";$("read-title").textContent="";$("read-description").textContent="";$("conversation").removeAttribute("href");$("reader").close();$("inbox").hidden=true;$("logout").hidden=true;$("login").hidden=false;};
+const clear=()=>{generation++;clearTimeout(refreshTimer);session=null;rows=[];active=null;updating=false;resetCapture();$("capture").close();$("entries").replaceChildren();$("read-content").textContent="";$("read-title").textContent="";$("read-description").textContent="";$("conversation").removeAttribute("href");$("reader").close();$("inbox").hidden=true;$("login").hidden=false;};
 if(!c||!c.url||!c.publicKey||!c.table||!c.fields){say("La safata encara no està connectada. Falta recuperar la configuració pública existent.");return;}
 const origin=new URL(c.url);
 if(origin.protocol!=="https:"||!origin.hostname.endsWith(".supabase.co")||/^sb_secret_/.test(c.publicKey)){say("Configuració pública no vàlida.");return;}
@@ -19,18 +19,37 @@ function render(){
 $("entries").replaceChildren();
 const filtered=rows.filter(row=>row[f.status]===status);
 if(!filtered.length){const p=document.createElement("p");p.textContent=status==="pending"?"Tot al dia. No tens lectures pendents.":"Encara no hi ha lectures revisades.";$("entries").append(p);}
-for(const row of filtered){const article=document.createElement("article");article.className="entry";const title=document.createElement("h2");title.textContent=row[f.title]||"Sense títol";const p=document.createElement("p");p.textContent=row[f.description]||"";const button=document.createElement("button");button.textContent="Llegir ↗";button.onclick=()=>open(row);article.append(title,p,button);$("entries").append(article);}
+for(const row of filtered){const article=document.createElement("article");article.className="entry";const title=document.createElement("h2");title.textContent=row[f.title]||"Sense títol";const p=document.createElement("p");p.textContent=row[f.description]||"";const button=document.createElement("button");button.textContent="Llegir ↗";button.type="button";button.onclick=()=>open(row);article.append(title,p,button);$("entries").append(article);}
 $("pending").setAttribute("aria-pressed",String(status==="pending"));$("done").setAttribute("aria-pressed",String(status==="done"));
 }
-function open(row){active=row;$("read-title").textContent=row[f.title]||"Sense títol";$("read-description").textContent=row[f.description]||"";$("read-content").textContent=row[f.content]||"";const link=$("conversation");link.hidden=true;link.removeAttribute("href");try{const u=new URL(row[f.conversation]);if(u.origin==="https://chatgpt.com"&&u.pathname.startsWith("/c/")){link.href=u.href;link.hidden=false;}}catch{}$("toggle").textContent=status==="pending"?"Fet":"Tornar a pendents";$("reader").showModal();}
+function open(row){if(updating)return;active=row;$("reader-message").textContent="";$("read-title").textContent=row[f.title]||"Sense títol";$("read-description").textContent=row[f.description]||"";$("read-content").textContent=row[f.content]||"";const link=$("conversation");link.hidden=true;link.removeAttribute("href");try{const u=new URL(row[f.conversation]);if(u.origin==="https://chatgpt.com"&&u.pathname.startsWith("/c/")){link.href=u.href;link.hidden=false;}}catch{}$("toggle").textContent=row[f.status]==="pending"?"Marcar com a revisada":"Tornar a pendents";$("toggle").disabled=false;$("reader").showModal();$("close").focus();}
 async function load(){say("Carregant…");const g=generation;const data=await api("/rest/v1/"+encodeURIComponent(c.table)+"?select="+encodeURIComponent([...new Set(Object.values(f))].join(","))+"&"+encodeURIComponent(f.owner)+"=eq."+encodeURIComponent(session.user.id)+"&order="+encodeURIComponent(f.created)+".desc");if(g!==generation)return;rows=data;render();say("");}
 $("login").hidden=false;
-$("login").onsubmit=async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;say("");try{generation++;setSession(await api("/auth/v1/token?grant_type=password",{method:"POST",body:JSON.stringify({email:$("email").value.trim(),password:$("password").value})},false));$("password").value="";$("login").hidden=true;$("inbox").hidden=false;$("logout").hidden=false;await load();}catch(error){say(error.message);}finally{button.disabled=false;}};
-$("logout").onclick=async()=>{const token=session?.access_token;clear();say("");if(token)fetch(origin.origin+"/auth/v1/logout",{method:"POST",headers:{apikey:c.publicKey,Authorization:"Bearer "+token}}).catch(()=>{});};
+$("login").onsubmit=async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;say("");try{generation++;setSession(await api("/auth/v1/token?grant_type=password",{method:"POST",body:JSON.stringify({email:$("email").value.trim(),password:$("password").value})},false));$("password").value="";$("login").hidden=true;$("inbox").hidden=false;await load();}catch(error){say(error.message);}finally{button.disabled=false;}};
 $("pending").onclick=()=>{status="pending";render();};$("done").onclick=()=>{status="done";render();};
 $("reload").onclick=async()=>{try{await load();}catch(error){say(error.message);}};
-$("close").onclick=()=>$("reader").close();
-$("toggle").onclick=async()=>{if(!active)return;const button=$("toggle");button.disabled=true;const row=active,g=generation;try{const next=row[f.status]==="pending"?"done":"pending";const changed=await api("/rest/v1/"+encodeURIComponent(c.table)+"?"+encodeURIComponent(f.id)+"=eq."+encodeURIComponent(row[f.id]),{method:"PATCH",headers:{Prefer:"return=representation"},body:JSON.stringify({[f.status]:next,[f.completed]:next==="done"?new Date().toISOString():null})});if(g!==generation)return;if(!Array.isArray(changed)||changed.length!==1)throw Error("No s’ha pogut confirmar el canvi.");row[f.status]=next;row[f.completed]=changed[0][f.completed];$("reader").close();render();say("");}catch(error){say(error.message);}finally{button.disabled=false;}};
+$("close").onclick=()=>{if(!updating)$("reader").close();};
+$("reader").addEventListener("cancel",event=>{if(updating)event.preventDefault();});
+$("reader").addEventListener("close",()=>{active=null;$("reader-message").textContent="";});
+$("toggle").onclick=async()=>{
+if(!active||updating)return;
+const row=active,g=generation,button=$("toggle"),next=row[f.status]==="pending"?"done":"pending";
+updating=true;button.disabled=true;$("close").disabled=true;$("reader-message").textContent="Desant el canvi…";
+try{
+const changed=await api("/rest/v1/"+encodeURIComponent(c.table)+"?"+encodeURIComponent(f.id)+"=eq."+encodeURIComponent(row[f.id])+"&"+encodeURIComponent(f.owner)+"=eq."+encodeURIComponent(session.user.id),{
+method:"PATCH",headers:{Prefer:"return=representation"},
+body:JSON.stringify({[f.status]:next,[f.completed]:next==="done"?new Date().toISOString():null})
+});
+if(g!==generation)return;
+if(!Array.isArray(changed)||changed.length!==1||changed[0][f.id]!==row[f.id]||changed[0][f.status]!==next||
+(next==="pending"?changed[0][f.completed]!==null:!changed[0][f.completed])){
+throw Error("El servidor no ha confirmat el canvi d’estat. Actualitza la safata i torna-ho a provar.");
+}
+rows=rows.map(item=>item[f.id]===row[f.id]?changed[0]:item);
+$("reader").close();render();say(next==="done"?"Entrada marcada com a revisada.":"Entrada tornada a pendents.");
+}catch(error){if(g===generation)$("reader-message").textContent=error.message;}
+finally{if(g===generation){updating=false;button.disabled=false;$("close").disabled=false;}}
+};
 
 let captureContent=null;
 function resetCapture(){
