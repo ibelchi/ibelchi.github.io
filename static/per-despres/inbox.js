@@ -11,7 +11,19 @@ if(c.publicKey.startsWith("eyJ")){try{const payload=JSON.parse(atob(c.publicKey.
 const f=c.fields;
 async function api(path,options={},auth=true){
 const response=await fetch(origin.origin+path,{...options,cache:"no-store",referrerPolicy:"no-referrer",headers:{"apikey":c.publicKey,"Content-Type":"application/json",...(auth?{"Authorization":"Bearer "+session.access_token}:{}),...options.headers}});
-if(!response.ok){if(auth&&response.status===401){clear();throw Error("La sessió ha caducat. Torna a entrar.");}if(response.status===409)throw Error("Aquest contingut ja s’ha desat. Actualitza la safata per veure’l.");throw Error(auth?"No s’ha pogut completar l’operació. Torna-ho a provar.":"No s’ha pogut iniciar sessió. Comprova el correu i la contrasenya.");}
+if(!response.ok){if(auth&&response.status===401){clear();throw Error("La sessió ha caducat. Torna a entrar.");}if(response.status===409)throw Error("Aquest contingut ja s’ha desat. Actualitza la safata per veure’l.");if(auth){
+let detail={};try{detail=await response.json();}catch{}
+const code=typeof detail.code==="string"&&/^[A-Z0-9_]{2,40}$/.test(detail.code)?detail.code:"";
+let reason="No s’ha pogut completar l’operació.";
+if(code==="42501")reason="Supabase ha rebutjat el canvi per una restricció de permisos.";
+if(code==="23514")reason="Una regla de la taula ha rebutjat el canvi d’estat.";
+if(code==="23502")reason="Supabase exigeix un valor en un camp que s’ha enviat buit.";
+if(code==="PGRST204")reason="L’API de Supabase no reconeix un dels camps del canvi.";
+const constraint=typeof detail.message==="string"?detail.message.match(/constraint "([a-zA-Z0-9_]+)"/):null;
+const column=code==="23502"&&typeof detail.message==="string"?detail.message.match(/column "([a-zA-Z0-9_]+)"/):null;
+throw Error(reason+" (HTTP "+response.status+(code?"; "+code:"")+(constraint?"; regla "+constraint[1]:"")+(column?"; camp "+column[1]:"")+").");
+}
+throw Error("No s’ha pogut iniciar sessió. Comprova el correu i la contrasenya.");}
 return response.status===204?null:response.json();
 }
 function setSession(value){session=value;clearTimeout(refreshTimer);const g=generation;refreshTimer=setTimeout(async()=>{try{const next=await api("/auth/v1/token?grant_type=refresh_token",{method:"POST",body:JSON.stringify({refresh_token:session.refresh_token})},false);if(g===generation)setSession(next);}catch{if(g===generation){clear();say("La sessió ha caducat. Torna a entrar.");}}},Math.max(1000,(value.expires_in-60)*1000));}
